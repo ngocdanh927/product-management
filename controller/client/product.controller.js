@@ -12,7 +12,6 @@ module.exports.index = async (req, res) => {
     );
     return item;
   });
-  console.log(newProducts);
   res.render("client/pages/products/index", {
     titlePage: "product",
     listProduct: newProducts,

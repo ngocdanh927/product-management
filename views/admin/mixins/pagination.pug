@@ -1,0 +1,13 @@
+mixin pagination(pagination)
+  nav(aria-label="Page navigation example")
+    ul.pagination
+      if(pagination.currentPage > 1)
+        li.page-item
+          button.page-link(btn-page=pagination.currentPage-1) #{"<<<"}
+      - for(let i =pagination.currentPage-1; i<= pagination.currentPage+1;i++)
+        if(i>0 && i<=pagination.pageTotal)
+            li.page-item
+                button.page-link(class=`${pagination.currentPage===i? "active":""}` btn-page=i)= i
+      if(pagination.currentPage < pagination.pageTotal) 
+        li.page-item
+            button.page-link(btn-page=pagination.currentPage+1) #{">>>"}

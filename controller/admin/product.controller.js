@@ -1,5 +1,7 @@
 const Product = require("../../model/product.model");
 
+const paginationHelper = require("../../helper/pagination");
+
 //[GET] /admin/products
 module.exports.index = async (req, res) => {
   const find = {};
@@ -18,22 +20,18 @@ module.exports.index = async (req, res) => {
   }
 
   //?page=
-  const countProduct = await Product.countDocuments(find);
-
-  const objectPagination = {
-    currentPage: 1,
-    limtPage: 4,
-    pageTotal: Math.ceil(countProduct / 4),
-  };
-
-  if (req.query.page) {
-    objectPagination.currentPage = parseInt(req.query.page);
-    objectPagination.skipPage =
-      (objectPagination.currentPage - 1) * objectPagination.limtPage;
-  }
+  const objectPagination = await paginationHelper(
+    {
+      currentPage: 1,
+      limitPage: 5,
+    },
+    req.query,
+    Product,
+    find
+  );
 
   const products = await Product.find(find)
-    .limit(objectPagination.limtPage)
+    .limit(objectPagination.limitPage)
     .skip(objectPagination.skipPage);
   res.render("admin/pages/products/index", {
     titlePage: "ProductAdmin",
@@ -42,4 +40,49 @@ module.exports.index = async (req, res) => {
     keyword: keyword,
     pagination: objectPagination,
   });
+};
+
+//[GET] /admin/products/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  const status = req.params.status;
+  const id = req.params.id;
+
+  await Product.updateOne({ _id: id }, { availabilityStatus: status });
+
+  //back lai trang truoc
+  const backURL = req.get("Referrer") || "/products";
+  res.redirect(backURL);
+};
+//[GET] /admin/products/change-multi
+module.exports.changeMulti = async (req, res) => {
+  try {
+    const type = req.body.type;
+    const ids = req.body.ids.split(",").map((id) => id.trim());
+    console.log(ids);
+
+    switch (type) {
+      case "In Stock":
+        await Product.updateMany(
+          { _id: { $in: ids } },
+          { availabilityStatus: "In Stock" }
+        );
+        break;
+      case "Low Stock":
+        await Product.updateMany(
+          { _id: { $in: ids } },
+          { availabilityStatus: "Low Stock" }
+        );
+        break;
+
+      default:
+        break;
+    }
+
+    //back lai trang truoc
+    const backURL = req.get("Referrer") || "/products";
+    res.redirect(backURL);
+  } catch (err) {
+    console.log(err);
+    res.send("Error updating");
+  }
 };

@@ -1,5 +1,6 @@
 const express = require("express");
-
+const methodOverride = require("method-override");
+const bodyParser = require("body-parser");
 //env
 require("dotenv").config();
 
@@ -17,6 +18,12 @@ app.set("view engine", "pug");
 
 //set public
 app.use(express.static("public"));
+
+//method override
+app.use(methodOverride("_method"));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded());
 
 //Route
 const routerClient = require("./routes/client/index.route");

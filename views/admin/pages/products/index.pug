@@ -2,6 +2,8 @@ extends ../../layout/default
 include ../../mixins/box-head.pug
 include ../../mixins/filterStatus.pug
 include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/form-multi-action.pug
 
 block main
   +box-head("Danh Sách Sản Phẩm")
@@ -15,47 +17,59 @@ block main
           +search(keyword)
 
 
+  .card.mb-3 
+    .card-header Danh Sách 
+    .card-body
+      .row 
+        .col-2 
+          +form-multi-action(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+      table.table.table-hover(checkbox-multi)
+        thead 
+          tr
+            th 
+              input(class="form-check-input" type="checkbox" value="" name="check-change-all")
+            th STT 
+            th Hình ảnh
+            th Tiêu đề 
+            th Giá
+            th Trạng thái
+            th Hoạt động
+        tbody
+          each item, index in listProduct
+            tr
+              td
+                input(class="form-check-input" type="checkbox" value=item._id name="check-change") 
+              td #{index+1}
+              td
+                img(
+                  src=item.thumbnail
+                  alt=item.title
+                  width="100px"
+                  height="auto"
+                  class="border "
+                )
+              td #{item.title}
+              td #{item.price}
+              td
+                button(
+                  class=`badge btn ${
+                    item.availabilityStatus === "In Stock" ? "btn-success" : "btn-danger"
+                  }`
+                  data-status=item.availabilityStatus
+                  data-id=item._id
+                  btn-change-status
+                ) #{item.availabilityStatus}
 
-  table.table.table-hover
-    thead 
-      tr 
-        th STT 
-        th Hình ảnh
-        th Tiêu đề 
-        th Giá
-        th Trạng thái
-        th Hoạt động
-    tbody
-      each item, index in listProduct
-        tr 
-          td #{index+1}
-          td
-            img(
-              src=item.thumbnail
-              alt=item.title
-              width="100px"
-              height="auto"
-              class="border "
-            )
-          td #{item.title}
-          td #{item.price}
-          td
-            a(
-              href="#"
-              class=`badge text-white text-decoration-none ${
-                item.availabilityStatus === "In Stock" ? "bg-success" : "bg-danger"
-              }`
-            ) #{item.availabilityStatus}
+              td
+                button.btn.btn-warning edit
+                button.btn.btn-danger.ms-2 delete
+  +pagination(pagination)
 
-          td
-            button.btn.btn-warning edit
-            button.btn.btn-danger.ms-2 delete
-  nav(aria-label="Page navigation example")
-    ul.pagination
-      li.page-item
-        button.page-link() Previous
-      - for(let i =1; i<= pagination.pageTotal;i++)
-        li.page-item
-          button.page-link(class=`${pagination.currentPage===i? "active":""}`)= i 
-      li.page-item
-        button.page-link(href='#') Next     
+  form(
+    action=""
+    method="POST"
+    id="form-change-status"
+    data-path=`${prefixAdmin}/products/change-status`
+  )  
+  
+  script(src="/admin/js/product.js")

@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "method-override": "^3.0.0",
     "mongoose": "^8.20.0",
     "pug": "^3.0.3"
   },

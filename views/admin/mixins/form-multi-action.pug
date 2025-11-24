@@ -1,0 +1,8 @@
+mixin form-multi-action(path)
+  form#form-search(action= path method="POST" form-change-multi) 
+    .input-group.mb-3
+      select(name="type" class="form-select" )
+        option(value="In Stock") còn hàng 
+        option(value="Low Stock") hết hàng 
+      input(type="text" name="ids" class="form-control d-none")
+      button(type="submit" class="btn btn-primary") áp dụng
