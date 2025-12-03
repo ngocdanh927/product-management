@@ -16,7 +16,7 @@ const app = express();
 const port = process.env.PORT;
 
 //set pug
-app.set("views", `${__dirname}/view`);
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 //set public
