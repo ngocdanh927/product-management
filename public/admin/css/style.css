@@ -14,3 +14,9 @@
   height: 60px;
   z-index: 100;
 }
+.form-imagePreview button {
+  top: -8px;
+  right: -8px;
+  opacity: 1 !important;
+  padding: 5px;
+}

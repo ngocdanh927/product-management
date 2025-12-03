@@ -1,0 +1,80 @@
+extends ../../layout/default.pug
+
+block main
+  .container.py-4
+    .row
+      .col-lg-8.col-md-10.mx-auto
+        //- Product Title
+        if (product.title)
+          h1.mb-4.fw-bold #{product.title}
+
+        .card.shadow-sm
+          .card-body
+            //- Product Image
+            if (product.thumbnail)
+              .text-center.mb-4
+                img.img-fluid.rounded(
+                  src=product.thumbnail
+                  alt=product.title
+                  style="max-width: 300px"
+                )
+
+            //- Product Information
+            .row.g-3
+              //- Price
+              if (product.price)
+                .col-md-6
+                  .d-flex.align-items-center
+                    i.bi.bi-tag-fill.text-primary.me-2
+                    div
+                      small.text-muted Giá
+                      div.fs-5.fw-bold.text-primary #{product.price}$
+
+              //- Discount
+              if (product.discountPercentage)
+                .col-md-6
+                  .d-flex.align-items-center
+                    i.bi.bi-percent.text-danger.me-2
+                    div
+                      small.text-muted Giảm giá
+                      div.fs-5.fw-bold.text-danger #{product.discountPercentage}%
+
+              //- Stock
+              if (product.stock)
+                .col-md-6
+                  .d-flex.align-items-center
+                    i.bi.bi-box-seam.text-info.me-2
+                    div
+                      small.text-muted Còn lại
+                      div.fs-5.fw-bold #{product.stock} sản phẩm
+
+              //- Availability Status
+              if (product.availabilityStatus)
+                .col-md-6
+                  .d-flex.align-items-center
+                    i.bi.bi-check-circle-fill.me-2(
+                      class=product.availabilityStatus === "In Stock" ? "text-success" : "text-danger"
+                    )
+                    div
+                      small.text-muted Trạng thái
+                      div
+                        if (product.availabilityStatus === "In Stock")
+                          span.badge.bg-success.fs-6 Còn hàng
+                        else
+                          span.badge.bg-danger.fs-6 Hết hàng
+
+              //- Position
+              if (product.position)
+                .col-md-6
+                  .d-flex.align-items-center
+                    i.bi.bi-geo-alt-fill.text-warning.me-2
+                    div
+                      small.text-muted Vị trí
+                      div.fs-5.fw-bold #{product.position}
+
+            //- Description
+            if (product.description)
+              hr.my-4
+              .description
+                h5.fw-bold.mb-3 Mô tả sản phẩm
+                div !{product.description}

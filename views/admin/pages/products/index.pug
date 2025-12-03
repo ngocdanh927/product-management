@@ -4,8 +4,11 @@ include ../../mixins/filterStatus.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-multi-action.pug
+include ../../mixins/alert.pug
 
 block main
+  +alert-success(5000)
+  +alert-error(5000)
   +box-head("Danh Sách Sản Phẩm")
   .card.mb-3
     .card-header Bộ lọc và tìm kiếm
@@ -21,8 +24,12 @@ block main
     .card-header Danh Sách 
     .card-body
       .row 
-        .col-2 
+        .col-3 
           +form-multi-action(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+        .col-7 
+        .col-2
+          a.btn.btn-success(href=`${prefixAdmin}/products/create`) + Thêm mới 
+
       table.table.table-hover(checkbox-multi)
         thead 
           tr
@@ -32,6 +39,7 @@ block main
             th Hình ảnh
             th Tiêu đề 
             th Giá
+            th Vị trí
             th Trạng thái
             th Hoạt động
         tbody
@@ -49,7 +57,9 @@ block main
                   class="border "
                 )
               td #{item.title}
-              td #{item.price}
+              td #{item.price}$
+              td 
+                input(type="number" style='width: 70px' class=" form-control" name="position" min=1 data-id=item._id value=item.position)
               td
                 button(
                   class=`badge btn ${
@@ -61,8 +71,9 @@ block main
                 ) #{item.availabilityStatus}
 
               td
-                button.btn.btn-warning edit
-                button.btn.btn-danger.ms-2 delete
+                a.btn.btn-secondary(href=`${prefixAdmin}/products/detail/${item._id}`) detail
+                a.btn.btn-warning.ms-2(href=`${prefixAdmin}/products/edit/${item._id}`) edit
+                button.btn.btn-danger.ms-2(btn-delete data-id=item._id) delete
   +pagination(pagination)
 
   form(
@@ -70,6 +81,12 @@ block main
     method="POST"
     id="form-change-status"
     data-path=`${prefixAdmin}/products/change-status`
+  )  
+  form(
+    action=""
+    method="POST"
+    id="form-delete"
+    data-path=`${prefixAdmin}/products/delete`
   )  
   
   script(src="/admin/js/product.js")

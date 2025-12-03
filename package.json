@@ -11,10 +11,15 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.18.2",
     "method-override": "^3.0.0",
     "mongoose": "^8.20.0",
+    "mongoose-slug-updater": "^3.3.0",
+    "multer": "^2.0.2",
     "pug": "^3.0.3"
   },
   "devDependencies": {

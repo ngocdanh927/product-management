@@ -1,0 +1,106 @@
+extends ../../layout/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-error(5000)
+  +box-head("Thêm mới sản phẩm")
+  form(
+    action=`${prefixAdmin}/products/create`
+    method="POST"
+    enctype="multipart/form-data"
+  )
+    div(class="form-group mb-3")
+      label(for="title") Tiêu đề
+      input(
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+
+      )
+    div(class="form-group mb-3")
+      label(for="desc") Mô tả
+      textarea(
+        class="form-control"
+        id="desc"
+        name="description"
+        rows="5"
+      )
+    div(class="form-group mb-3")
+      label(for="price") Giá
+      input(
+        type="number"
+        class="form-control"
+        id="price"
+        name="price"
+        value="0"
+        min="0"
+      )
+    div(class="form-group mb-3")
+      label(for="discount") % Giảm giá
+      input(
+        type="number"
+        class="form-control"
+        id="discount"
+        name="discountPercentage"
+        value="0"
+        min="0"
+      )
+    div(class="form-group mb-3")
+      label(for="stock") Số lượng
+      input(
+        type="number"
+        class="form-control"
+        id="stock"
+        name="stock"
+        value="0"
+        min="0"
+      )
+    div(class="form-group mb-3")
+      label(for="thumbnail") Ảnh
+      input(
+        type="file"
+        class="form-control mb-3"
+        id="thumbnail"
+        name="thumbnail"
+        accept="image/*"
+        upload-image-input
+      )
+      .form-imagePreview.position-relative.d-inline-block.d-none
+        button.btn-close.bg-danger.rounded-circle.position-absolute(type="button" btn-remove-imagePreview)
+        img(class="img-thumbnail " src="" width="200px" height="auto" alt="image-upload" upload-image-preview )
+    div(class="form-group mb-3")
+      label(for="position") Vị trí
+      input(
+        type="number"
+        class="form-control"
+        id="position"
+        name="position"
+        placeholder="Tự động tăng"
+        min="1"
+      )
+    div(class="form-group mb-3 form-check form-check-inline")
+      input(
+        type="radio"
+        class="form-check-input"
+        id="statusActive"
+        name="availabilityStatus"
+        value="In Stock"
+        checked
+      )
+      label(for="statusActive" class="form-check-label") còn hàng
+    div(class="form-group mb-3 form-check form-check-inline")
+      input(
+        type="radio"
+        class="form-check-input"
+        id="statusInActive"
+        name="availabilityStatus"
+        value="Low Stock"
+      )
+      label(for="statusInActive" class="form-check-label") hết hàng
+    div(class="form-group mb-3")
+      button(
+        type="submit"
+        class="btn btn-primary"
+      ) Tạo mới

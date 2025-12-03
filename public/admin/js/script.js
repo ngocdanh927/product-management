@@ -81,7 +81,7 @@ if (checkboxMulti) {
   }
 }
 
-//handle form change multi status
+//handle form change multi
 const formChangeMulti = document.querySelector("[form-change-multi]");
 if (formChangeMulti) {
   formChangeMulti.addEventListener("submit", (e) => {
@@ -89,16 +89,61 @@ if (formChangeMulti) {
     const boxChecked = checkboxMulti.querySelectorAll(
       "input[name='check-change']:checked"
     );
-    let listId = [];
-    boxChecked.forEach((itemCheck) => {
-      listId.push(itemCheck.value);
-    });
-    const input = formChangeMulti.querySelector("input[type='text']");
-    console.log(listId.join(", "));
+    const type = e.target.elements.type.value;
 
-    if (boxChecked.length > 0) {
+    if (boxChecked.length > 0 && type) {
+      //comfirm xoa
+      if (type === "delete") {
+        if (!confirm("xác nhận xóa sản phẩm!")) return;
+      }
+
+      //gui req den server
+      let listId = [];
+      boxChecked.forEach((itemCheck) => {
+        if (type === "Change position") {
+          const inputPosition = itemCheck
+            .closest("tr")
+            .querySelector("input[name='position']");
+          listId.push(itemCheck.value + "-" + inputPosition.value);
+        } else listId.push(itemCheck.value);
+      });
+
+      const input = formChangeMulti.querySelector("input[type='text']");
+      console.log(listId.join(", "));
+
       input.value = listId.join(", ");
       formChangeMulti.submit();
-    } else alert("vui check vao box!");
+    } else alert("vui lòng chọn hoạt động và check vào box!");
+  });
+}
+
+// handel Alert
+const showAlert = document.querySelector("[alert-success]");
+if (showAlert) {
+  const timeShow = showAlert.getAttribute("data-time");
+  setTimeout(() => {
+    showAlert.classList.remove("show");
+  }, timeShow);
+}
+
+//show image on upload image
+const inputImg = document.querySelector("[upload-image-input]");
+const formImgPreview = document.querySelector(".form-imagePreview");
+const previewImg = document.querySelector("[upload-image-preview]");
+
+if (inputImg) {
+  inputImg.addEventListener("change", (e) => {
+    formImgPreview.classList.remove("d-none");
+    const [file] = e.target.files;
+    previewImg.src = URL.createObjectURL(file);
+  });
+}
+
+//handle click remove image upload
+const btnRemoveImg = document.querySelector("[btn-remove-imagePreview]");
+if (btnRemoveImg) {
+  btnRemoveImg.addEventListener("click", (e) => {
+    inputImg.value = "";
+    formImgPreview.classList.add("d-none");
   });
 }

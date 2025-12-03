@@ -1,6 +1,9 @@
 const express = require("express");
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const flash = require("express-flash");
 //env
 require("dotenv").config();
 
@@ -24,6 +27,22 @@ app.use(methodOverride("_method"));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
+
+// cookieParser
+app.use(cookieParser("keyboard cat"));
+
+// session
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+  })
+);
+
+// flash
+app.use(flash());
 
 //Route
 const routerClient = require("./routes/client/index.route");

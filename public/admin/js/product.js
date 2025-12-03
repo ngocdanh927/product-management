@@ -16,3 +16,19 @@ if (btnChangeStatus) {
     });
   });
 }
+//handle delete
+const btnDelete = document.querySelectorAll("[btn-delete]");
+const formDelete = document.querySelector("#form-delete");
+
+if (formDelete && btnDelete) {
+  btnDelete.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (confirm("xac nhan xoa san pham!")) {
+        const id = btn.getAttribute("data-id");
+        const path = formDelete.getAttribute("data-path");
+        formDelete.action = path + `/${id}?_method=DELETE`;
+        formDelete.submit();
+      }
+    });
+  });
+}
