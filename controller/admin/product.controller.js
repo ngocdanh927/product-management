@@ -149,7 +149,6 @@ module.exports.createProduct = async (req, res) => {
     req.body.position = countProducts + 1;
   } else req.body.position = parseInt(req.body.position);
 
-  req.body.thumbnail = `/uploads/${req.file.filename}`;
   // them vao database
   const addProduct = new Product(req.body);
   await addProduct.save();
