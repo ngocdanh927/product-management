@@ -1,4 +1,23 @@
-Header
-  .inner-header.border-bottom.bg-dark.position-fixed.px-4.pt-2
-    a(class="fs-3 text-white fw-bold text-decoration-none" href="/admin/dashboard") ADMIN
-
+header.navbar.navbar-dark.bg-dark.fixed-top.shadow
+  .container-fluid.px-4
+    a.navbar-brand.d-flex.align-items-center(href="/admin/dashboard")
+      i.bi.bi-speedometer2.me-2.fs-4
+      span.fw-bold.fs-4 ADMIN PANEL
+    button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav")
+      span.navbar-toggler-icon
+    .collapse.navbar-collapse.justify-content-end#navbarNav
+      ul.navbar-nav
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown")
+            i.bi.bi-person-circle.fs-5
+          ul.dropdown-menu.dropdown-menu-end
+            li
+              a.dropdown-item(href="#")
+                i.bi.bi-gear.me-2
+                | Cài đặt
+            li
+              hr.dropdown-divider
+            li
+              a.dropdown-item(href="#")
+                i.bi.bi-box-arrow-right.me-2
+                | Đăng xuất

@@ -147,3 +147,17 @@ if (btnRemoveImg) {
     formImgPreview.classList.add("d-none");
   });
 }
+
+//handle sort
+const selectSort = document.querySelector("[select-sort]");
+if (selectSort) {
+  const btnSort = document.querySelector("[btn-sort]");
+  const url = new URL(window.location.href);
+  btnSort.addEventListener("click", (e) => {
+    const valueSelected = selectSort.value.split("-");
+    const [sortKey, sortValue] = valueSelected;
+    url.searchParams.set("sortKey", sortKey);
+    url.searchParams.set("sortValue", sortValue);
+    window.location.href = url.href;
+  });
+}

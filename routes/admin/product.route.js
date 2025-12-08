@@ -28,6 +28,7 @@ Router.get("/edit/:id", controller.edit);
 Router.patch(
   "/edit/:id",
   upload.single("thumbnail"),
+  uploadCloud.upload,
   validate.createProduct,
   controller.editProduct
 );

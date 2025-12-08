@@ -5,7 +5,7 @@ const systemConfig = require("../../config/system");
 //[GET] /admin/products
 module.exports.index = async (req, res) => {
   const find = { deleted: false };
-
+  let sort = { position: "desc" };
   //?status =
   const availabilityStatus = req.query.status;
   if (availabilityStatus) {
@@ -30,8 +30,17 @@ module.exports.index = async (req, res) => {
     find
   );
 
+  //??sortKey=  &sortValue=
+  const sortKey = req.query.sortKey;
+  const sortValue = req.query.sortValue;
+
+  if (sortKey) {
+    sort = {};
+    sort[sortKey] = sortValue;
+  }
+
   const products = await Product.find(find)
-    .sort({ position: "desc" })
+    .sort(sort)
     .limit(objectPagination.limitPage)
     .skip(objectPagination.skipPage);
 
@@ -187,11 +196,6 @@ module.exports.editProduct = async (req, res) => {
     req.body.position = countProducts + 1;
   } else {
     req.body.position = parseInt(req.body.position);
-  }
-
-  // Nếu có file mới thì update thumbnail
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
   }
 
   // UPDATE chứ KHÔNG phải tạo mới

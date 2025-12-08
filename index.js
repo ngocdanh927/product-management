@@ -1,16 +1,11 @@
 const express = require("express");
+const path = require("path");
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const flash = require("express-flash");
-const cloudinary = require("cloudinary").v2;
 
-cloudinary.config({
-  cloud_name: "dygsbwyjo",
-  api_key: "792834368898588",
-  api_secret: "<your_api_secret>", // Click 'View API Keys' above to copy your API secret
-});
 //env
 require("dotenv").config();
 
@@ -50,6 +45,12 @@ app.use(
 
 // flash
 app.use(flash());
+
+//tinyMCE
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 
 //Route
 const routerClient = require("./routes/client/index.route");
