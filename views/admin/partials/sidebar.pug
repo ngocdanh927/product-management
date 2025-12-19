@@ -15,31 +15,35 @@
     .px-3.mb-2.mt-3
       small.text-uppercase.text-muted.fw-bold QUẢN LÝ
     
-    a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
-      href=`${prefixAdmin}/products`
-      class="hover-bg-light"
-    )
-      i.bi.bi-box-seam.me-3
-      | Sản phẩm
+    if role.permissions.includes("products_view")
+      a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
+        href=`${prefixAdmin}/products`
+        class="hover-bg-light"
+      )
+        i.bi.bi-box-seam.me-3
+        | Sản phẩm
     
-    a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
-      href=`${prefixAdmin}/product-category`
-      class="hover-bg-light"
-    )
-      i.bi.bi-list-ul.me-3
-      | Danh mục
-    a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
-      href=`${prefixAdmin}/roles`
-      class="hover-bg-light"
-    )
-      i.bi.bi-shield-lock.me-3
-      | Vai trò
-    a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
-      href=`${prefixAdmin}/roles/permission`
-      class="hover-bg-light"
-    )
-      i.bi.bi-key.me-3
-      | Phân quyền
+    if role.permissions.includes("products-category_view")
+      a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
+        href=`${prefixAdmin}/product-category`
+        class="hover-bg-light"
+      )
+        i.bi.bi-list-ul.me-3
+        | Danh mục
+    if role.permissions.includes("roles_view")
+      a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
+        href=`${prefixAdmin}/roles`
+        class="hover-bg-light"
+      )
+        i.bi.bi-shield-lock.me-3
+        | Vai trò
+    if role.permissions.includes("roles_permissions")
+      a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
+        href=`${prefixAdmin}/roles/permission`
+        class="hover-bg-light"
+      )
+        i.bi.bi-key.me-3
+        | Phân quyền
     
     //- a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
     //-   href=`${prefixAdmin}/orders`
@@ -47,13 +51,13 @@
     //- )
     //-   i.bi.bi-cart-check.me-3
     //-   | Đơn hàng
-    
-    a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
-      href=`${prefixAdmin}/accounts`
-      class="hover-bg-light"
-    )
-      i.bi.bi-people.me-3
-      | Người dùng
+    if role.permissions.includes("accounts_view")
+      a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
+        href=`${prefixAdmin}/accounts`
+        class="hover-bg-light"
+      )
+        i.bi.bi-people.me-3
+        | Người dùng
     
     //- System Section
     .px-3.mb-2.mt-3

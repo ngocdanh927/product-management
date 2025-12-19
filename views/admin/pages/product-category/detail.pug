@@ -105,15 +105,18 @@ block main
             | Thông Tin Khác
         .card-body
           .mb-3
-            small.text-muted ID:
+            small.text-muted người tạo:
             br
-            code.text-dark= category._id
+            code.text-dark= category.createdByFullName
 
           .mb-3
             small.text-muted Ngày tạo:
             br
             strong= new Date(category.createdAt).toLocaleString('vi-VN')
-
+          .mb-3
+            small.text-muted người cập nhật:
+            br
+            code.text-dark= category.updatedByFullName
           .mb-0
             small.text-muted Cập nhật:
             br

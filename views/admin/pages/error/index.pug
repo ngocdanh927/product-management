@@ -1,0 +1,16 @@
+extends ../../layout/default
+
+block main
+  .container
+    .row.justify-content-center.align-items-center(style="min-height:70vh")
+      .col-md-6
+        .card.shadow-sm.text-center
+          .card-body.py-5
+            i.bi.bi-shield-lock.display-3.text-danger.mb-3
+            h3.fw-bold.text-danger.mb-3
+              | Truy cập bị từ chối
+            p.text-muted.mb-4
+              | Bạn không được quyền truy cập vào trang này.
+            a.btn.btn-primary(href="/admin/dashboard")
+              i.bi.bi-house-door.me-1
+              | Quay về Dashboard

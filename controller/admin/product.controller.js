@@ -1,4 +1,5 @@
 const Product = require("../../model/product.model");
+const Acccount = require("../../model/account.model");
 
 const paginationHelper = require("../../helper/pagination");
 const systemConfig = require("../../config/system");
@@ -44,6 +45,18 @@ module.exports.index = async (req, res) => {
     .limit(objectPagination.limitPage)
     .skip(objectPagination.skipPage);
 
+  //get fullName user update product
+  for (const product of products) {
+    if (product.updatedBy) {
+      const user = await Acccount.findOne({ _id: product.updatedBy }).select(
+        "fullName"
+      );
+      product.updatedByFullName = user.fullName;
+    } else {
+      product.updatedByFullName = "";
+    }
+  }
+
   res.render("admin/pages/products/index", {
     titlePage: "ProductAdmin",
     listProduct: products,
@@ -58,11 +71,14 @@ module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
-  await Product.updateOne({ _id: id }, { availabilityStatus: status });
+  await Product.updateOne(
+    { _id: id },
+    { availabilityStatus: status, updatedBy: res.locals.user._id }
+  );
 
   req.flash("success", "Cập nhật trạng thái thành công");
   //back lai trang truoc
-  const backURL = req.get("Referrer") || "/products";
+  const backURL = req.get("Referrer");
   res.redirect(backURL);
 };
 //[PATCH] /admin/products/change-multi
@@ -75,8 +91,9 @@ module.exports.changeMulti = async (req, res) => {
       case "In Stock":
         await Product.updateMany(
           { _id: { $in: ids } },
-          { availabilityStatus: "In Stock" }
+          { availabilityStatus: "In Stock", updatedBy: res.locals.user._id }
         );
+
         req.flash(
           "success",
           `Cập nhật trạng thái thành công ${ids.length} sản phẩm `
@@ -85,7 +102,7 @@ module.exports.changeMulti = async (req, res) => {
       case "Low Stock":
         await Product.updateMany(
           { _id: { $in: ids } },
-          { availabilityStatus: "Low Stock" }
+          { availabilityStatus: "Low Stock", updatedBy: res.locals.user._id }
         );
         req.flash(
           "success",
@@ -95,7 +112,11 @@ module.exports.changeMulti = async (req, res) => {
       case "delete":
         await Product.updateMany(
           { _id: { $in: ids } },
-          { deleted: true, deletedAt: new Date() }
+          {
+            deleted: true,
+            deletedAt: new Date(),
+            deletedBy: res.locals.user._id,
+          }
         );
         req.flash("success", `Đã xóa thành công ${ids.length} sản phẩm `);
         break;
@@ -127,11 +148,10 @@ module.exports.changeMulti = async (req, res) => {
 //[DELETE] /admin/products/delete/:id
 module.exports.delete = async (req, res) => {
   const id = req.params.id;
-  // console.log(id);
 
   await Product.updateOne(
     { _id: id },
-    { deleted: true, deletedAt: new Date() }
+    { deleted: true, deletedAt: new Date(), updatedBy: res.locals.user._id }
   );
   req.flash("success", `Đã xóa thành công`);
   //back lai trang truoc
@@ -147,8 +167,6 @@ module.exports.create = async (req, res) => {
 };
 //[POST] /admin/products/create
 module.exports.createProduct = async (req, res) => {
-  console.log(req.body);
-
   req.body.price = parseFloat(req.body.price);
   req.body.discountPercentage = parseFloat(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
@@ -157,6 +175,8 @@ module.exports.createProduct = async (req, res) => {
     const countProducts = await Product.countDocuments();
     req.body.position = countProducts + 1;
   } else req.body.position = parseInt(req.body.position);
+
+  req.body.createdBy = res.locals.user._id;
 
   // them vao database
   const addProduct = new Product(req.body);
@@ -198,6 +218,8 @@ module.exports.editProduct = async (req, res) => {
     req.body.position = parseInt(req.body.position);
   }
 
+  req.body.updatedBy = res.locals.user._id;
+
   // UPDATE chứ KHÔNG phải tạo mới
   await Product.updateOne({ _id: id }, req.body);
 
@@ -211,6 +233,20 @@ module.exports.editProduct = async (req, res) => {
 module.exports.detail = async (req, res) => {
   const id = req.params.id;
   const product = await Product.findOne({ _id: id });
+
+  if (product.updatedBy) {
+    const user = await Acccount.findOne({ _id: product.updatedBy }).select(
+      "fullName"
+    );
+    product.updatedByFullName = user.fullName;
+  }
+  if (product.createdBy) {
+    const user = await Acccount.findOne({ _id: product.createdBy }).select(
+      "fullName"
+    );
+    product.createdByFullName = user.fullName;
+  }
+
   res.render("admin/pages/products/detail", {
     titlePage: "chi tiết sản phẩm",
     product: product,

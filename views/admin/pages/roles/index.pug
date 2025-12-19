@@ -2,6 +2,7 @@ extends ../../layout/default
 include ../../mixins/alert.pug
 
 block main
+
   +alert-success(5000)
   +alert-error(5000)
   
@@ -12,9 +13,10 @@ block main
         i.bi.bi-shield-check.me-2.text-primary
         | Quản Lý Vai Trò
       p.text-muted.mb-0 Quản lý vai trò và phân quyền hệ thống
-    a.btn.btn-primary(href=`${prefixAdmin}/roles/create`)
-      i.bi.bi-plus-circle.me-2
-      | Thêm Vai Trò
+    if role.permissions.includes("roles_create")
+      a.btn.btn-primary(href=`${prefixAdmin}/roles/create`)
+        i.bi.bi-plus-circle.me-2
+        | Thêm Vai Trò
 
   //- Roles List
   .card.border-0.shadow-sm
@@ -89,19 +91,19 @@ block main
                         title="Chi tiết"
                       )
                         i.bi.bi-eye
-                      
-                      a.btn.btn-outline-warning(
-                        href=`${prefixAdmin}/roles/edit/${item._id}`
-                        title="Sửa"
-                      )
-                        i.bi.bi-pencil
-                      
-                      button.btn.btn-outline-danger(
-                        btn-delete
-                        data-id=item._id
-                        title="Xóa"
-                      )
-                        i.bi.bi-trash
+                      if role.permissions.includes("roles_edit")
+                        a.btn.btn-outline-warning(
+                          href=`${prefixAdmin}/roles/edit/${item._id}`
+                          title="Sửa"
+                        )
+                          i.bi.bi-pencil
+                      if role.permissions.includes("roles_delete")
+                        button.btn.btn-outline-danger(
+                          btn-delete
+                          data-id=item._id
+                          title="Xóa"
+                        )
+                          i.bi.bi-trash
 
   //- Hidden Forms
   form#form-change-status(

@@ -18,9 +18,10 @@ block main
         i.bi.bi-box-seam.me-2.text-primary
         | Quản Lý Sản Phẩm
       p.text-muted.mb-0 Quản lý danh sách sản phẩm của cửa hàng
-    a.btn.btn-primary(href=`${prefixAdmin}/products/create`)
-      i.bi.bi-plus-circle.me-2
-      | Thêm Sản Phẩm
+    if role.permissions.includes("products_create")
+      a.btn.btn-primary(href=`${prefixAdmin}/products/create`)
+        i.bi.bi-plus-circle.me-2
+        | Thêm Sản Phẩm
 
   //- Filter & Search
   .card.mb-3.border-0.shadow-sm
@@ -63,7 +64,8 @@ block main
       //- Toolbar
       .row.g-3.mb-3
         .col-md-6
-          +form-multi-action(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+          if role.permissions.includes("products_edit")
+            +form-multi-action(`${prefixAdmin}/products/change-multi?_method=PATCH`)
         .col-md-6.text-end
           .btn-group
             button.btn.btn-sm.btn-outline-secondary(type="button")
@@ -84,6 +86,7 @@ block main
               th.text-center Giá
               th.text-center Vị Trí
               th.text-center Trạng Thái
+              th Cập nhật gần đây
               th.text-center Thao Tác
 
           tbody
@@ -128,6 +131,9 @@ block main
                     )
                       i.bi(class=item.availabilityStatus === "In Stock" ? "bi-check-circle" : "bi-x-circle")
                       |  #{item.availabilityStatus}
+                  td 
+                    .fw-normal #{item.updatedByFullName}
+                    .fw-normal #{new Date(item.updatedAt).toLocaleDateString("vi-VN")}
                   td.text-center
                     .btn-group.btn-group-sm
                       a.btn.btn-outline-info(
@@ -135,17 +141,19 @@ block main
                         title="Chi tiết"
                       )
                         i.bi.bi-eye
-                      a.btn.btn-outline-warning(
-                        href=`${prefixAdmin}/products/edit/${item._id}`
-                        title="Sửa"
-                      )
-                        i.bi.bi-pencil
-                      button.btn.btn-outline-danger(
-                        btn-delete
-                        data-id=item._id
-                        title="Xóa"
-                      )
-                        i.bi.bi-trash
+                      if role.permissions.includes("products_edit")
+                        a.btn.btn-outline-warning(
+                          href=`${prefixAdmin}/products/edit/${item._id}`
+                          title="Sửa"
+                        )
+                          i.bi.bi-pencil
+                      if role.permissions.includes("products_delete")
+                        button.btn.btn-outline-danger(
+                          btn-delete
+                          data-id=item._id
+                          title="Xóa"
+                        )
+                          i.bi.bi-trash
 
   //- Pagination
   .mt-4

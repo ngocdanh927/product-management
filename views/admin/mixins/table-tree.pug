@@ -49,7 +49,9 @@ mixin table-tree(listCategory, level = 0)
           )
             i.bi(class=item.status === "In Stock" ? "bi-check-circle" : "bi-x-circle")
             | #{item.status === "In Stock" ? " Còn hàng" : " Hết hàng"}
-
+        td
+          .fw-normal #{item.updatedByFullName }
+          .fw-normal #{new Date(item.updatedAt).toLocaleDateString("vi-VN") }
         td.text-center
           .btn-group.btn-group-sm
             a.btn.btn-outline-info(
@@ -57,17 +59,19 @@ mixin table-tree(listCategory, level = 0)
               title="Chi tiết"
             )
               i.bi.bi-eye
-            a.btn.btn-outline-warning(
-              href=`${prefixAdmin}/product-category/edit/${item._id}`
-              title="Sửa"
-            )
-              i.bi.bi-pencil
-            button.btn.btn-outline-danger(
-              btn-delete
-              data-id=item._id
-              title="Xóa"
-            )
-              i.bi.bi-trash
+            if role.permissions.includes("products-category_edit")
+              a.btn.btn-outline-warning(
+                href=`${prefixAdmin}/product-category/edit/${item._id}`
+                title="Sửa"
+              )
+                i.bi.bi-pencil
+            if role.permissions.includes("products-category_delete")
+              button.btn.btn-outline-danger(
+                btn-delete
+                data-id=item._id
+                title="Xóa"
+              )
+                i.bi.bi-trash
 
       if (item.children)
         +table-tree(item.children, level + 1)

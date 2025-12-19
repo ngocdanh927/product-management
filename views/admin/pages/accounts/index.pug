@@ -75,18 +75,19 @@ block main
                       |  #{item.status === "active" ? "Hoạt động" : "Dừng"}
                   
                   td.text-center
-                      a.btn.btn-outline-warning(
-                        href=`${prefixAdmin}/accounts/edit/${item._id}`
-                        title="Sửa"
-                      )
-                        i.bi.bi-pencil
-                      
-                      button.btn.btn-outline-danger(
-                        btn-delete
-                        data-id=item._id
-                        title="Xóa"
-                      )
-                        i.bi.bi-trash
+                      if role.permissions.includes("accounts_edit")
+                        a.btn.btn-outline-warning(
+                          href=`${prefixAdmin}/accounts/edit/${item._id}`
+                          title="Sửa"
+                        )
+                          i.bi.bi-pencil
+                      if role.permissions.includes("accounts_delete")
+                        button.btn.btn-outline-danger(
+                          btn-delete
+                          data-id=item._id
+                          title="Xóa"
+                        )
+                          i.bi.bi-trash
 
   //- Hidden Forms
   form#form-delete(
@@ -94,4 +95,5 @@ block main
     method="POST"
     data-path=`${prefixAdmin}/accounts/delete`
   )
-  
+
+

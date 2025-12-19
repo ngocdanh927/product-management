@@ -17,9 +17,10 @@ block main
         i.bi.bi-list-ul.me-2.text-primary
         | Quản Lý Danh Mục
       p.text-muted.mb-0 Quản lý danh mục sản phẩm
-    a.btn.btn-primary(href=`${prefixAdmin}/product-category/create`)
-      i.bi.bi-plus-circle.me-2
-      | Thêm Danh Mục
+    if role.permissions.includes("products-category_create")
+      a.btn.btn-primary(href=`${prefixAdmin}/product-category/create`)
+        i.bi.bi-plus-circle.me-2
+        | Thêm Danh Mục
   //- Filter & Search
   .card.mb-3.border-0.shadow-sm
     .card-header.bg-white
@@ -56,7 +57,8 @@ block main
     .card-body
       .row.g-3.mb-3
         .col-md-4
-          +form-multi-action(`${prefixAdmin}/product-category/change-multi?_method=PATCH`)       
+          if role.permissions.includes("products-category_edit")
+            +form-multi-action(`${prefixAdmin}/product-category/change-multi?_method=PATCH`)       
       .table-responsive
         table.table.table-hover.align-middle(checkbox-multi)
           thead.table-light
@@ -68,6 +70,7 @@ block main
               th Tiêu Đề
               th.text-center Vị Trí
               th.text-center Trạng Thái
+              th Cập nhật gần đây
               th.text-center Thao Tác
 
           tbody
