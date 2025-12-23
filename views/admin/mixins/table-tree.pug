@@ -1,17 +1,20 @@
 mixin table-tree(listCategory, level = 0)
-  - const prefix = Array(level + 1).join("-- ")
+  - const prefix = Array(level + 1).join("---- ")
   if !listCategory || listCategory.length === 0
     tr
       td.text-center.py-5(colspan="7")
         i.bi.bi-inbox.display-1.text-muted.d-block
         p.text-muted Chưa có danh mục nào
   else
-    each item in listCategory
+    each item, index in listCategory
       tr
         td.text-center
           input.form-check-input(type="checkbox" value=item._id name="check-change")
-        td.text-center.fw-semibold #{item.index + 1}
-
+        td.text-center.fw-semibold 
+          if item.index >= 0
+            span #{item.index + 1}
+          else 
+            span #{index +1}
         td.text-center
           if item.thumbnail
             img.rounded.border(
@@ -27,8 +30,8 @@ mixin table-tree(listCategory, level = 0)
 
         td
           .fw-semibold #{`${prefix}${item.title}`}
-          if item.description
-            small.text-muted.d-block.text-truncate(style="max-width: 300px") #{item.description}
+          //- if item.description
+            //- small.text-muted.d-block.text-truncate(style="max-width: 300px") #{item.description}
 
         td.text-center
           input.form-control.form-control-sm.text-center(
@@ -42,13 +45,13 @@ mixin table-tree(listCategory, level = 0)
 
         td.text-center
           button.badge.border-0.fs-6(
-            class=item.status === "In Stock" ? "bg-success" : "bg-danger"
+            class=item.status === "active" ? "bg-success" : "bg-danger"
             data-status=item.status
             data-id=item._id
             btn-change-status
           )
-            i.bi(class=item.status === "In Stock" ? "bi-check-circle" : "bi-x-circle")
-            | #{item.status === "In Stock" ? " Còn hàng" : " Hết hàng"}
+            i.bi(class=item.status === "active" ? "bi-check-circle" : "bi-x-circle")
+            | #{item.status === "active" ? "hoạt động" : "dừng"}
         td
           .fw-normal #{item.updatedByFullName }
           .fw-normal #{new Date(item.updatedAt).toLocaleDateString("vi-VN") }

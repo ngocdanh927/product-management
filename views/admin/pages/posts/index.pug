@@ -15,13 +15,13 @@ block main
   .d-flex.justify-content-between.align-items-center.mb-4
     div
       h2.fw-bold.mb-1
-        i.bi.bi-box-seam.me-2.text-primary
-        | Quản Lý Sản Phẩm
-      p.text-muted.mb-0 Quản lý danh sách sản phẩm của cửa hàng
-    if role.permissions.includes("products_create")
-      a.btn.btn-primary(href=`${prefixAdmin}/products/create`)
-        i.bi.bi-plus-circle.me-2
-        | Thêm Sản Phẩm
+        i.bi.bi-file-earmark-richtext.me-2.text-primary
+        | Quản Lý Bài Viết
+      p.text-muted.mb-0 Xem, sửa và xuất bản nội dung tin tức/blog
+    if role.permissions.includes("posts_create")
+      a.btn.btn-primary(href=`${prefixAdmin}/posts/create`)
+        i.bi.bi-pencil-square.me-2
+        | Viết Bài Mới
 
   //- Filter & Search
   .card.mb-3.border-0.shadow-sm
@@ -33,8 +33,8 @@ block main
       .row.g-3
         .col-md-7
           +filterStatus(status, [
-            { label: "Còn hàng", value: "In Stock" },
-            { label: "Hết hàng", value: "Low Stock" }
+              { label: "Hoạt động", value: "active" },
+              { label: "Ngưng hoạt động", value: "inactive" }
           ])
         .col-md-5
           +search(keyword)
@@ -49,38 +49,38 @@ block main
       +multi-sort([
         { value: "position-desc", name: "vị trí giảm dần" },
         { value: "position-asc", name: "vị trí tăng dần" },
-        { value: "price-desc", name: "giá giảm dần" },
-        { value: "price-asc", name: "giá tăng dần" },
         { value: "title-asc", name: "tiêu đề A - Z" },
-        { value: "title-desc", name: "tiêu đề Z - A" }
+        { value: "title-desc", name: "tiêu đề Z - A" },
+        { value: "createdAt-desc", name: "mới nhất" },
+        { value: "createdAt-asc", name: "cũ nhất" }
       ])
 
-  //- Products List
+  //- Posts List
   .card.border-0.shadow-sm
     .card-header.bg-white.d-flex.justify-content-between.align-items-center
       h6.mb-0.fw-semibold
-        i.bi.bi-list-ul.me-2
-        | Danh Sách Sản Phẩm
-      span.badge.bg-primary #{listProduct.length} sản phẩm
+        i.bi.bi-list-stars.me-2
+        | Danh Sách Bài Viết
+      span.badge.bg-primary #{listPosts.length} bài viết
 
     .card-body
       //- Toolbar
       .row.g-3.mb-3
         .col-md-6
-          if role.permissions.includes("products_edit")
+          if role.permissions.includes("posts_edit")
             +form-multi-action(
                 [
-                  {value: "In Stock",name:"còn hàng"},
-                  {value: "Low Stock",name:"hết hàng"},
-                  {value: "delete",name:"xóa sản phẩm"},
+                  {value: "active",name:"hiển thị"},
+                  {value: "inactive",name:"bản nháp"},
+                  {value: "delete",name:"xóa bài viết"},
                   {value: "Change position",name:"thay đổi vị trí"},
                 ],
-                `${prefixAdmin}/products/change-multi?_method=PATCH`
+                `${prefixAdmin}/posts/change-multi?_method=PATCH`
               )
         .col-md-6.text-end
           .btn-group
             button.btn.btn-sm.btn-outline-secondary(type="button")
-              i.bi.bi-grid-3x3-gap
+              i.bi.bi-grid
             button.btn.btn-sm.btn-outline-secondary.active(type="button")
               i.bi.bi-list-ul
 
@@ -94,40 +94,45 @@ block main
               th.text-center STT
               th.text-center Hình Ảnh
               th Tiêu Đề
-              th.text-center Giá
+              th.text-center Nổi bật
               th.text-center Vị Trí
               th.text-center Trạng Thái
-              th Cập nhật gần đây
+              th Người đăng
               th.text-center Thao Tác
 
           tbody
-            if listProduct.length === 0
+            if listPosts.length === 0
               tr
-                td.text-center.py-5(colspan="8")
-                  i.bi.bi-inbox.display-1.text-muted.d-block
-                  p.text-muted Không có sản phẩm
+                td.text-center.py-5(colspan="9")
+                  i.bi.bi-journal-x.display-1.text-muted.d-block
+                  p.text-muted Không có bài viết nào được tìm thấy
             else
-              each item, index in listProduct
+              each item, index in listPosts
                 tr
                   td.text-center
                     input.form-check-input(type="checkbox" value=item._id name="check-change")
-                  td.text-center.fw-semibold #{(pagination.currentPage-1)*pagination.limitPage + index +1}
+                  td.text-center.fw-semibold #{index +1}
                   td.text-center
                     img.rounded.border(
                       src=item.thumbnail
                       alt=item.title
-                      style="width: 60px; height: 60px; object-fit: cover;"
+                      style="width: 80px; height: 50px; object-fit: cover;"
                     )
                   td
-                    .fw-semibold #{item.title}
-                    if item.description
-                      small.text-muted.d-block.text-truncate(style="max-width: 300px") !{item.description}
+                    .fw-semibold.text-primary #{item.title}
+                    if item.post_category_title
+                       small.badge.bg-light.text-dark.border.me-1 #{item.post_category_title}
                   td.text-center
-                    span.fw-bold.text-success #{item.price}$
+                    if item.featured === "1"
+                      span.badge.bg-warning.text-dark
+                        i.bi.bi-star-fill.me-1
+                        | Nổi bật
+                    else
+                      span.text-muted -
                   td.text-center
                     input.form-control.form-control-sm.text-center(
                       type="number"
-                      style="width: 70px"
+                      style="width: 65px; margin: 0 auto;"
                       name="position"
                       min="1"
                       data-id=item._id
@@ -135,34 +140,34 @@ block main
                     )
                   td.text-center
                     button.badge.border-0.fs-6(
-                      class=item.availabilityStatus === "In Stock" ? "bg-success" : "bg-danger"
-                      data-status=item.availabilityStatus
+                      class=item.status === "active" ? "bg-success" : "bg-secondary"
+                      data-status=item.status
                       data-id=item._id
                       btn-change-status
                     )
-                      i.bi(class=item.availabilityStatus === "In Stock" ? "bi-check-circle" : "bi-x-circle")
-                      |  #{item.availabilityStatus}
+                      i.bi(class=item.status === "active" ? "bi-eye-fill" : "bi-eye-slash-fill")
+                      |  #{item.status === "active" ? "Hiển thị" : "Bản nháp"}
                   td 
-                    .fw-normal #{item.updatedByFullName}
-                    .fw-normal #{new Date(item.updatedAt).toLocaleDateString("vi-VN")}
+                    .fw-normal #{item.createdByFullName}
+                    small.text-muted #{new Date(item.createdAt).toLocaleDateString("vi-VN")}
                   td.text-center
                     .btn-group.btn-group-sm
                       a.btn.btn-outline-info(
-                        href=`${prefixAdmin}/products/detail/${item._id}`
-                        title="Chi tiết"
+                        href=`${prefixAdmin}/posts/detail/${item._id}`
+                        title="Xem chi tiết"
                       )
-                        i.bi.bi-eye
-                      if role.permissions.includes("products_edit")
+                        i.bi.bi-file-earmark-text
+                      if role.permissions.includes("posts_edit")
                         a.btn.btn-outline-warning(
-                          href=`${prefixAdmin}/products/edit/${item._id}`
-                          title="Sửa"
+                          href=`${prefixAdmin}/posts/edit/${item._id}`
+                          title="Chỉnh sửa bài"
                         )
                           i.bi.bi-pencil
-                      if role.permissions.includes("products_delete")
+                      if role.permissions.includes("posts_delete")
                         button.btn.btn-outline-danger(
                           btn-delete
                           data-id=item._id
-                          title="Xóa"
+                          title="Xóa bài viết"
                         )
                           i.bi.bi-trash
 
@@ -174,12 +179,13 @@ block main
   form#form-change-status(
     action=""
     method="POST"
-    data-path=`${prefixAdmin}/products/change-status`
+    data-path=`${prefixAdmin}/posts/change-status`
   )
   form#form-delete(
     action=""
     method="POST"
-    data-path=`${prefixAdmin}/products/delete`
+    data-path=`${prefixAdmin}/posts/delete`
   )
   
-  script(src="/admin/js/product.js")
+  //- Đừng quên tạo file JS tương ứng hoặc dùng chung logic với product
+  script(src="/admin/js/post.js")

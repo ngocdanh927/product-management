@@ -30,7 +30,10 @@ block main
     .card-body
       .row.g-3
         .col-md-7
-          +filterStatus(status)
+          +filterStatus(status, [
+              { label: "Hoạt động", value: "active" },
+              { label: "Ngưng hoạt động", value: "inactive" }
+          ])
         .col-md-5
           +search(keyword)
   //- Sort
@@ -58,7 +61,15 @@ block main
       .row.g-3.mb-3
         .col-md-4
           if role.permissions.includes("products-category_edit")
-            +form-multi-action(`${prefixAdmin}/product-category/change-multi?_method=PATCH`)       
+            +form-multi-action(
+                [
+                  {value: "active",name:"hoạt động"},
+                  {value: "inactive",name:"không hoạt động"},
+                  {value: "delete",name:"xóa danh mục"},
+                  {value: "Change position",name:"thay đổi vị trí"},
+                ],
+                `${prefixAdmin}/product-category/change-multi?_method=PATCH`
+              )     
       .table-responsive
         table.table.table-hover.align-middle(checkbox-multi)
           thead.table-light

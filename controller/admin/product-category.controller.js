@@ -40,7 +40,11 @@ module.exports.index = async (req, res) => {
       item.updatedByFullName = "";
     }
   }
-  const treeCategory = createTree(categories);
+
+  const treeCategory =
+    status == "inactive" ? categories : createTree(categories);
+
+  // console.log(treeCategory);
 
   res.render("admin/pages/product-category/index", {
     titlePage: "Danh mục",

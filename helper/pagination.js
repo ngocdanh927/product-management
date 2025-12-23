@@ -1,8 +1,8 @@
-module.exports = async (objectPagination, query, Product, find) => {
-  const countProduct = await Product.countDocuments(find);
+module.exports = async (objectPagination, query, Items, find) => {
+  const countItem = await Items.countDocuments(find);
 
   objectPagination.pageTotal = Math.ceil(
-    countProduct / objectPagination.limitPage
+    countItem / objectPagination.limitPage
   );
 
   if (query.page) {

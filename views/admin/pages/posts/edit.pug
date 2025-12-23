@@ -11,121 +11,79 @@ block main
     div
       h2.fw-bold.mb-1
         i.bi.bi-pencil-square.me-2.text-warning
-        | Chỉnh Sửa Sản Phẩm
-      p.text-muted.mb-0 Cập nhật thông tin sản phẩm
-    a.btn.btn-outline-secondary(href=`${prefixAdmin}/products`)
+        | Chỉnh Sửa Bài Viết
+      p.text-muted.mb-0 Cập nhật nội dung và cấu hình bài viết
+    a.btn.btn-outline-secondary(href=`${prefixAdmin}/posts`)
       i.bi.bi-arrow-left.me-2
       | Quay Lại
 
   //- Form
   form(
-    action=`${prefixAdmin}/products/edit/${product._id}?_method=PATCH`
+    action=`${prefixAdmin}/posts/edit/${post._id}?_method=PATCH`
     method="POST"
     enctype="multipart/form-data"
-    id="form-edit-product"
+    id="form-edit-post"
   )
     .row
-      //- Left Column
+      //- Left Column (Nội dung chính)
       .col-lg-8
         //- Basic Info Card
         .card.mb-3.border-0.shadow-sm
           .card-header.bg-white
             h6.mb-0.fw-semibold
-              i.bi.bi-info-circle.me-2
-              | Thông Tin Cơ Bản
+              i.bi.bi-card-text.me-2
+              | Nội Dung Bài Viết
           .card-body
             //- Title
             .mb-3
               label.form-label.fw-semibold(for="title")
-                | Tiêu đề sản phẩm
+                | Tiêu đề bài viết
                 span.text-danger *
               input.form-control(
                 type="text"
                 id="title"
                 name="title"
-                placeholder="Nhập tên sản phẩm..."
-                value=product.title
+                placeholder="Nhập tiêu đề bài viết..."
+                value=post.title
+                required
               )
-            //- Parent Category
+            
+            //- Category
             .mb-3
-              label.form-label.fw-semibold(for="product-catefory_id")
+              label.form-label.fw-semibold(for="post_category_id")
                 i.bi.bi-diagram-3.me-1
-                | Danh mục sản phẩm
+                | Danh mục bài viết
               select.form-select(
-                id="product-category_id"
-                name="product_category_id"
+                id="post_category_id"
+                name="post_category_id"
               )
-                option(value="") -- Chọn danh mục cha --
+                option(value="") -- Chọn danh mục --
                 if listCategory
-                  +select-tree(listCategory,0,product.product_category_id)
-            //- Description
+                  //- Tham số thứ 3 là id của danh mục hiện tại để tự động 'selected'
+                  +select-tree(listCategory, 0, post.post_category_id)
+            
+            //- Short Description
             .mb-3
-              label.form-label.fw-semibold(for="desc") Mô tả chi tiết
-              textarea.form-control.tinymce(
+              label.form-label.fw-semibold(for="desc") Mô tả ngắn (Sapo)
+              textarea.form-control(
                 id="desc"
                 name="description"
-                rows="5"
-                placeholder="Nhập mô tả sản phẩm..."
-              ) #{product.description}
+                rows="3"
+                placeholder="Tóm tắt nội dung..."
+              ) #{post.description}
 
-        //- Pricing & Inventory Card
-        .card.mb-3.border-0.shadow-sm
-          .card-header.bg-white
-            h6.mb-0.fw-semibold
-              i.bi.bi-currency-dollar.me-2
-              | Giá & Kho Hàng
-          .card-body
-            .row.g-3
-              //- Price
-              .col-md-4
-                label.form-label.fw-semibold(for="price")
-                  i.bi.bi-tag.me-1
-                  | Giá bán
-                  span.text-danger *
-                .input-group
-                  input.form-control(
-                    type="number"
-                    id="price"
-                    name="price"
-                    value=product.price
-                    min="0"
-                    step="0.01"
-                    required
-                  )
-                  span.input-group-text $
+            //- Main Content (TinyMCE)
+            .mb-3
+              label.form-label.fw-semibold(for="content")
+                i.bi.bi-file-richtext.me-1
+                | Nội dung chi tiết
+              textarea.form-control.tinymce(
+                id="content"
+                name="content"
+                rows="15"
+              ) !{post.content} 
 
-              //- Discount
-              .col-md-4
-                label.form-label.fw-semibold(for="discount")
-                  i.bi.bi-percent.me-1
-                  | Giảm giá
-                .input-group
-                  input.form-control(
-                    type="number"
-                    id="discount"
-                    name="discountPercentage"
-                    value=product.discountPercentage
-                    min="0"
-                    max="100"
-                  )
-                  span.input-group-text %
-
-              //- Stock
-              .col-md-4
-                label.form-label.fw-semibold(for="stock")
-                  i.bi.bi-box.me-1
-                  | Số lượng
-                  span.text-danger *
-                input.form-control(
-                  type="number"
-                  id="stock"
-                  name="stock"
-                  value=product.stock
-                  min="0"
-                  required
-                )
-
-      //- Right Column
+      //- Right Column (Cấu hình)
       .col-lg-4
         //- Image Card
         .card.mb-3.border-0.shadow-sm
@@ -137,15 +95,15 @@ block main
             label.form-label.fw-semibold(for="thumbnail") Ảnh đại diện
             
             //- Current Image
-            if product.thumbnail
+            if post.thumbnail
               .mb-3.text-center
                 p.text-muted.small Ảnh hiện tại:
                 img.img-thumbnail.rounded(
-                  src=product.thumbnail
-                  alt=product.title
-                  style="max-width: 200px"
+                  src=post.thumbnail
+                  alt=post.title
+                  style="max-width: 100%"
                 )
-            
+
             //- Upload Area
             .border.border-2.border-dashed.rounded.p-4.text-center.mb-3.bg-light
               input.d-none(
@@ -177,57 +135,75 @@ block main
           .card-header.bg-white
             h6.mb-0.fw-semibold
               i.bi.bi-gear.me-2
-              | Cài Đặt
+              | Cài Đặt & Xuất Bản
           .card-body
             //- Position
             .mb-3
               label.form-label.fw-semibold(for="position")
                 i.bi.bi-sort-numeric-down.me-1
-                | Vị trí hiển thị
+                | Vị trí
               input.form-control(
                 type="number"
                 id="position"
                 name="position"
                 min="1"
-                value=product.position
+                value=post.position
               )
+
+            //- Featured (Nổi bật)
+            .mb-3
+              label.form-label.fw-semibold.d-block.mb-2
+                i.bi.bi-star.me-1
+                | Đánh dấu nổi bật
+              
+              .form-check.form-switch
+                input.form-check-input(
+                  type="checkbox"
+                  id="featured"
+                  name="featured"
+                  value="1"
+                  checked=(post.featured === "1")
+                )
+                label.form-check-label(for="featured") Tin nổi bật
+
+            hr.text-muted
 
             //- Status
             .mb-3
               label.form-label.fw-semibold.d-block.mb-2
-                i.bi.bi-check-circle.me-1
-                | Trạng thái kho
+                i.bi.bi-toggle-on.me-1
+                | Trạng thái
               
               .form-check.border.rounded.p-3.mb-2
                 input.form-check-input(
                   type="radio"
                   id="statusActive"
-                  name="availabilityStatus"
-                  value="In Stock"
-                  checked=(product.availabilityStatus === "In Stock")
+                  name="status"
+                  value="active"
+                  checked=(post.status === "active")
                 )
                 label.form-check-label.ms-2(for="statusActive")
-                  i.bi.bi-check-circle-fill.text-success
-                  |  Còn hàng
+                  i.bi.bi-eye-fill.text-success
+                  |  Hiển thị ngay
 
               .form-check.border.rounded.p-3
                 input.form-check-input(
                   type="radio"
                   id="statusInActive"
-                  name="availabilityStatus"
-                  value="Low Stock"
-                  checked=(product.availabilityStatus === "Low Stock")
+                  name="status"
+                  value="inactive"
+                  checked=(post.status === "inactive")
                 )
                 label.form-check-label.ms-2(for="statusInActive")
-                  i.bi.bi-exclamation-circle-fill.text-warning
-                  |  Sắp hết
+                  i.bi.bi-eye-slash-fill.text-secondary
+                  |  Bản nháp (Ẩn)
 
     //- Actions
     .card.border-0.shadow-sm.mt-4
       .card-body
         .d-flex.justify-content-between.align-items-center
           div
-            a.btn.btn-outline-danger(href=`${prefixAdmin}/products`)
+            a.btn.btn-outline-danger(href=`${prefixAdmin}/posts`)
               i.bi.bi-x-circle.me-2
               | Hủy Bỏ
             button.btn.btn-outline-secondary.ms-2(
@@ -239,5 +215,4 @@ block main
           
           button.btn.btn-warning.btn-lg.text-white(type="submit")
             i.bi.bi-check-circle.me-2
-            | Cập Nhật Sản Phẩm
-
+            | Cập Nhật Bài Viết

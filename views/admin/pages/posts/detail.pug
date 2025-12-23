@@ -1,0 +1,211 @@
+extends ../../layout/default.pug
+
+block main
+  //- Page Header
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+      h2.fw-bold.mb-1
+        i.bi.bi-file-earmark-text.me-2.text-primary
+        | Chi Tiết Bài Viết
+      if post.slug
+        p.text-muted.mb-0
+          i.bi.bi-link-45deg.me-1
+          | /#{post.slug}
+    .d-flex.gap-2
+      a.btn.btn-warning(href=`${prefixAdmin}/posts/edit/${post.id}`)
+        i.bi.bi-pencil.me-2
+        | Chỉnh Sửa
+      a.btn.btn-outline-secondary(href=`${prefixAdmin}/posts`)
+        i.bi.bi-arrow-left.me-2
+        | Quay Lại
+
+  .row
+    //- Left Column - Main Content
+    .col-lg-8
+      //- Main Info Card
+      .card.shadow-sm.mb-3
+        .card-body
+          //- Thumbnail
+          if post.thumbnail
+            .text-center.mb-4
+              img.img-fluid.rounded.border(
+                src=post.thumbnail
+                alt=post.title
+                style="max-height: 400px; width: 100%; object-fit: cover;"
+              )
+          
+          //- Title & Badges
+          if post.title
+            h3.fw-bold.mb-2 #{post.title}
+            .mb-4
+              if post.post_category_title
+                span.badge.bg-light.text-dark.border.me-2
+                  i.bi.bi-folder2-open.me-1
+                  | #{post.post_category_title}
+              if post.featured === "1"
+                span.badge.bg-warning.text-dark
+                  i.bi.bi-star-fill.me-1
+                  | Tin nổi bật
+
+          //- Short Description (Sapo)
+          if post.description
+            .alert.alert-light.border-start.border-4.border-primary.bg-light
+              strong.text-primary Tóm tắt:
+              span.fst-italic.ms-2 #{post.description}
+          
+          hr.my-4
+
+          //- Main Content (HTML)
+          if post.content
+            .post-content
+              h5.fw-bold.mb-3.text-secondary
+                i.bi.bi-justify-left.me-2
+                | Nội dung chi tiết
+              //- Sử dụng != để render HTML từ TinyMCE
+              .content-body!= post.content
+          else 
+            .text-center.text-muted.py-4
+              i.bi.bi-file-earmark-x.display-4
+              p.mt-2 Chưa có nội dung chi tiết
+
+    //- Right Column - Meta Info
+    .col-lg-4
+      //- Status & Visibility Card
+      .card.shadow-sm.mb-3
+        .card-header.bg-white
+          h6.mb-0.fw-semibold
+            i.bi.bi-gear.me-2
+            | Trạng Thái & Hiển Thị
+        .card-body
+          //- Status
+          .d-flex.justify-content-between.align-items-center.mb-3
+            span.text-muted Trạng thái:
+            if post.deleted
+              span.badge.bg-danger Đã xóa
+            else if post.status === "active"
+              span.badge.bg-success
+                i.bi.bi-eye.me-1
+                | Hiển thị
+            else
+              span.badge.bg-secondary
+                i.bi.bi-eye-slash.me-1
+                | Bản nháp
+          
+          //- Featured
+          .d-flex.justify-content-between.align-items-center.mb-3
+            span.text-muted Nổi bật:
+            if post.featured === "1"
+              span.text-warning.fw-bold
+                i.bi.bi-check-circle-fill.me-1
+                | Có
+            else
+              span.text-muted Không
+
+          //- Position
+          .d-flex.justify-content-between.align-items-center.mb-3
+            span.text-muted Vị trí:
+            span.fw-bold #{post.position}
+
+          //- Slug
+          if post.slug
+            div
+              small.text-muted.d-block.mb-1 Slug (Đường dẫn):
+              code.d-block.bg-light.p-2.rounded.text-break= post.slug
+
+      //- User Actions Card
+      .card.shadow-sm.mb-3
+        .card-header.bg-white
+          h6.mb-0.fw-semibold
+            i.bi.bi-people.me-2
+            | Thông Tin Người Dùng
+        .card-body
+          if post.createdByFullName
+            .mb-3
+              small.text-muted.d-block
+                i.bi.bi-person-plus.me-1
+                | Người tạo
+              .fw-semibold= post.createdByFullName
+          
+          if post.updatedByFullName
+            .mb-3
+              small.text-muted.d-block
+                i.bi.bi-pencil-square.me-1
+                | Người cập nhật
+              .fw-semibold= post.updatedByFullName
+
+      //- Timeline Card
+      .card.shadow-sm.mb-3
+        .card-header.bg-white
+          h6.mb-0.fw-semibold
+            i.bi.bi-clock-history.me-2
+            | Lịch Sử
+        .card-body
+          if post.createdAt
+            .mb-3
+              .d-flex
+                .me-3
+                  i.bi.bi-calendar-plus.fs-5.text-success
+                div
+                  small.text-muted.d-block Ngày đăng
+                  .fw-semibold= new Date(post.createdAt).toLocaleString('vi-VN')
+          
+          if post.updatedAt
+            .mb-3
+              .d-flex
+                .me-3
+                  i.bi.bi-calendar-check.fs-5.text-info
+                div
+                  small.text-muted.d-block Cập nhật lần cuối
+                  .fw-semibold= new Date(post.updatedAt).toLocaleString('vi-VN')
+
+      //- Quick Actions
+      .card.shadow-sm
+        .card-header.bg-white
+          h6.mb-0.fw-semibold
+            i.bi.bi-lightning.me-2
+            | Thao Tác
+        .card-body
+          .d-grid.gap-2
+            a.btn.btn-warning(href=`${prefixAdmin}/posts/edit/${post.id}`)
+              i.bi.bi-pencil.me-2
+              | Chỉnh Sửa
+            
+            if post.deleted
+              button.btn.btn-success(
+                type="button"
+                onclick=`if(confirm('Khôi phục bài viết này?')) window.location.href='${prefixAdmin}/posts/restore/${post.id}'`
+              )
+                i.bi.bi-arrow-counterclockwise.me-2
+                | Khôi Phục
+            else
+              button.btn.btn-outline-danger(
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal"
+              )
+                i.bi.bi-trash.me-2
+                | Xóa Bài Viết
+
+  //- Delete Modal
+  .modal.fade(id="deleteModal" tabindex="-1")
+    .modal-dialog.modal-dialog-centered
+      .modal-content
+        .modal-header.border-0
+          h5.modal-title
+            i.bi.bi-exclamation-triangle.text-danger.me-2
+            | Xác Nhận Xóa
+          button.btn-close(type="button" data-bs-dismiss="modal")
+        .modal-body
+          p.mb-0 Bạn có chắc chắn muốn xóa bài viết:
+            br
+            strong.text-primary #{post.title}
+          p.small.text-muted.mt-2 (Hành động này sẽ chuyển bài viết vào thùng rác)
+        .modal-footer.border-0
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Hủy
+          form(
+            action=`${prefixAdmin}/posts/delete/${post.id}?_method=DELETE`
+            method="POST"
+          )
+            button.btn.btn-danger(type="submit")
+              i.bi.bi-trash.me-2
+              | Xóa Ngay
