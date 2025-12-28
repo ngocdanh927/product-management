@@ -1,0 +1,48 @@
+/* @import url("variables.css"); */
+
+/* ======== page search ====== */
+
+/* Màu nhấn mạnh cho từ khóa */
+.text-main-red {
+  color: var(--red-main);
+  font-style: italic;
+}
+
+/* Header trang tìm kiếm */
+.search-header h2 {
+  font-size: 1.75rem;
+  color: var(--text-color);
+}
+
+/* Nút quay lại khi không có kết quả */
+.btn-outline-main {
+  border: 2px solid var(--red-main);
+  color: var(--red-main);
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 10px 25px;
+  transition: var(--transition-base);
+}
+
+.btn-outline-main:hover {
+  background-color: var(--red-main);
+  color: #fff;
+}
+
+/* Hiệu ứng cho icon khi không có kết quả */
+.no-result-icon i {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

@@ -2,6 +2,7 @@ const PostCategory = require("../../model/post-category.model");
 const Acccount = require("../../model/account.model");
 const systemPrefix = require("../../config/system");
 const createTree = require("../../helper/createTreeCategory.helper");
+const ProductCategory = require("../../model/product-category.model");
 
 //[GET] /post-category
 module.exports.index = async (req, res) => {

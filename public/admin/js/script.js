@@ -22,12 +22,10 @@ if (formSearch) {
     const url = new URL(window.location.href);
 
     const keyword = e.target.elements.keyword.value;
-    console.log(keyword);
 
     url.searchParams.delete("page");
     if (keyword) url.searchParams.set("keyword", keyword.trim());
     else url.searchParams.delete("keyword");
-
     window.location.href = url.href;
   });
 }

@@ -1,0 +1,12 @@
+:root {
+  /* Màu đỏ chủ đạo */
+  --red-main: #ce4242; /* Đỏ dịu hiện đại */
+  --red-hover: #b33636; /* Đỏ đậm hơn khi hover */
+  --red-light: rgba(206, 66, 66, 0.2); /* Đỏ nhạt cho box-shadow */
+
+  /* Các màu bổ trợ */
+  --text-color: #212529;
+  --border-color: #ddd;
+  --bg-light: #f8f9fa;
+  --transition-base: all 0.3s ease;
+}

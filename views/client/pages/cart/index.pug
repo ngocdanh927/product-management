@@ -1,0 +1,141 @@
+extends ../../layout/default.pug
+
+block css 
+  link(rel="stylesheet", href="/css/pages/cart.css")
+
+block main
+
+  //- Header
+  .cart-header
+    .container
+      h1.mb-2
+        i.bi.bi-cart3.me-3
+        | Giỏ Hàng Của Bạn
+      p.mb-0.opacity-75 Quản lý sản phẩm trong giỏ hàng
+
+  .container.pb-5
+    if cart && cart.products && cart.products.length > 0
+      .row
+        //- Cart Items
+        .col-lg-8
+          each item in cart.products
+            .cart-item
+              .row.align-items-center
+                .col-md-2
+                  if item.detail.thumbnail
+                    a(href=href=`/products/detail/${item.detail.slug}`) 
+                      img.product-img(src=item.detail.thumbnail alt=item.detail.title)
+                  else
+                    .product-img.bg-light.d-flex.align-items-center.justify-content-center
+                      i.bi.bi-image.fs-1.text-muted
+                
+                .col-md-4
+                  h5.mb-2= item.detail.title
+                  if item.detail.stock
+                    .small.text-muted
+                      i.bi.bi-box-seam.me-1
+                      | Còn #{item.detail.stock} sản phẩm
+                
+                .col-md-2
+                  if item.detail.discountPercentage > 0
+                    .price-original= item.detail.price + '$'
+                    .price-sale= item.detail.priceNew + '$'
+                    .badge.bg-danger.small #{item.detail.discountPercentage}% OFF
+                  else
+                    .price-sale= item.detail.price + '$'
+                
+                .col-md-3
+                  .quantity-control
+                    button.btn-minus(
+                      type="button"
+                      data-id=item.product_id
+                    )
+                      i.bi.bi-dash
+                    input.quantity-input(
+                      type="number"
+                      value=item.quantity
+                      min="1"
+                      max=item.detail.stock
+                      readonly
+                    )
+                    button.btn-plus(
+                      type="button"
+                      data-id=item.product_id
+                    )
+                      i.bi.bi-plus
+                
+                .col-md-1.text-end
+                  .fw-bold.mb-3= item.detail.totalPrice + '$'
+                  a.btn.btn-sm.btn-remove.fs-3(
+                    href=`/cart/delete/${item.product_id}`
+                    title="Xóa"
+                  )
+                    i.bi.bi-trash.me-1
+                    
+
+          //- Continue Shopping
+          .mt-4
+            a.btn-continue(href="/products")
+              i.bi.bi-arrow-left.me-2
+              | Tiếp Tục Mua Sắm
+
+        //- Cart Summary
+        .col-lg-4
+          .cart-summary
+            h4.mb-4
+              i.bi.bi-receipt.me-2
+              | Tóm Tắt Đơn Hàng
+            
+            .summary-row
+              span Tạm tính:
+              span.fw-bold= cart.totalPrice + '$'
+            
+            .summary-row
+              span Giảm giá:
+              span.text-danger.fw-bold -#{cart.totalDiscount ? cart.totalDiscount : 0}$
+            
+            .summary-row.border-0.mb-3
+              span Phí vận chuyển:
+              span.text-muted Miễn phí
+            
+            .summary-row.border-0.pt-3.border-top.mb-4
+              span.fs-5 Tổng cộng:
+              span.summary-total= cart.totalPriceNew + '$'
+            
+            button.btn-checkout(type="button" onclick="checkout()")
+              i.bi.bi-credit-card.me-2
+              | Thanh Toán
+            
+            .mt-3.text-center
+              small.text-muted
+                i.bi.bi-shield-check.me-1
+                | Thanh toán an toàn & bảo mật
+
+            //- Promo Code
+            .mt-4
+              .border-top.pt-3
+                label.form-label.fw-semibold
+                  i.bi.bi-tag.me-2
+                  | Mã giảm giá
+                .input-group
+                  input.form-control(
+                    type="text"
+                    placeholder="Nhập mã giảm giá"
+                    id="promoCode"
+                  )
+                  button.btn(
+                    style="background: var(--red-main); color: white;"
+                    type="button"
+                    onclick="applyPromo()"
+                  ) Áp dụng
+
+    else
+      //- Empty Cart
+      .empty-cart
+        i.bi.bi-cart-x
+        h3.mb-3 Giỏ Hàng Trống
+        p.text-muted.mb-4 Bạn chưa có sản phẩm nào trong giỏ hàng
+        a.btn-checkout.d-inline-block.w-auto.px-5(href="/products")
+          i.bi.bi-shop.me-2
+          | Khám Phá Sản Phẩm
+

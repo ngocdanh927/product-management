@@ -1,0 +1,47 @@
+mixin list-product(listProduct)
+  .inner-list.mt-5
+  .row.g-4
+    each item in listProduct
+      .col-lg-3.col-md-4.col-sm-6
+        .card.h-100.product-card
+          //- Discount Badge
+          if item.discountPercentage
+            .badge-discount -#{item.discountPercentage}%
+          
+          //- Product Image
+          a.card-img-wrapper(href=`/products/detail/${item.slug}`)
+            img.card-img-top(
+              src=item.thumbnail 
+              alt=item.title
+              loading="lazy"
+            )
+            .view-detail-overlay
+              span Xem chi tiết
+          
+          //- Product Info
+          .card-body.d-flex.flex-column.p-3
+            h5.product-title(title=item.title) 
+              a(href=`/products/detail/${item.slug}`) #{item.title}
+            
+            .pricing.mt-auto
+              .d-flex.align-items-baseline.gap-2
+                span.new-price #{item.newPrice}$
+                if item.discountPercentage
+                  del.old-price #{item.price}$
+              
+              if item.discountPercentage
+                p.text-danger.small.mb-0.fw-medium
+                  i.bi.bi-lightning-fill.me-1
+                  | Tiết kiệm: #{(item.price - item.newPrice).toFixed(2)}$
+            
+          //- Action Buttons
+          form(
+            action=`/cart/add-cart/${item._id}`
+            method="POST"
+          )
+            input(type="number" class="d-none" value=1  min="1" readonly)
+            .card-footer.bg-transparent.border-0.p-3.pt-0
+              .d-grid.gap-2
+                button.btn.btn-main.btn-sm.add-to-cart(type="submit")
+                  i.bi.bi-cart-plus.me-2
+                  | Thêm vào giỏ

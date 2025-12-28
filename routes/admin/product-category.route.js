@@ -61,4 +61,5 @@ Router.get(
   checkPermission("products-category_view"),
   controller.detail
 );
+// Router.get("/test", controller.test);
 module.exports = Router;

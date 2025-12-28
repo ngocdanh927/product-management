@@ -1,0 +1,32 @@
+extends ../../layout/default.pug
+include ../../mixins/list-product.pug 
+
+block css
+  link(rel="stylesheet", href="/css/pages/search.css")
+
+block main
+  .container.my-5
+    .row
+      .col-12
+        //- Tiêu đề kết quả tìm kiếm
+        .search-header.mb-5.pb-3.border-bottom
+          h2.fw-bold 
+            i.bi.bi-search.me-2.text-muted
+            | Kết quả tìm kiếm cho: 
+            span.text-main-red "#{keyword}"
+          p.text-muted Tìm thấy #{products.length} sản phẩm phù hợp
+
+    if products.length > 0
+      //- Sử dụng lại mixin đã tối ưu ở câu trước
+      +list-product(products)
+    else
+      //- Giao diện khi không tìm thấy kết quả
+      .row
+        .col-12.text-center.py-5
+          .no-result-icon.mb-4
+            i.bi.bi-search-heart(style="font-size: 5rem; color: #ddd;")
+          h3 Rất tiếc, không tìm thấy sản phẩm nào!
+          p.text-muted Hãy thử lại với từ khóa khác hoặc kiểm tra lỗi chính tả.
+          a.btn.btn-outline-main.mt-3(href="/products") 
+            i.bi.bi-arrow-left.me-2
+            | Quay lại cửa hàng

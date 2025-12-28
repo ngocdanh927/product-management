@@ -1,17 +1,51 @@
-Header
-  .inner-header.border-bottom.p-3
-    .container
-      .row
-        .col-8
-          .inner-logo
-            img( style="max-width:150px" src="https://res.cloudinary.com/dygsbwyjo/image/upload/v1765963478/Gemini_Generated_Image_po5ntrpo5ntrpo5n_k01pti.png", alt="logo")
+include ../mixins/sub-menu
 
+Header
+  .inner-header.border-bottom.py-3
+    .container
+      .row.align-items-center
+        .col-2
+          a.inner-logo(href=`/`) 
+            img(
+              src="https://res.cloudinary.com/dygsbwyjo/image/upload/v1765963478/Gemini_Generated_Image_po5ntrpo5ntrpo5n_k01pti.png"
+              alt="logo"
+              style="max-width:140px"
+            )
         .col-4
-          .inner-menu 
-            ul(class="nav justify-content-end")
-              li(class="nav-item")
-                a(class="nav-link" href="") Trang Chủ 
-              li(class="nav-item")
-                a(class="nav-link" href="") Sản Phẩm
-              li(class="nav-item")
-                a(class="nav-link" href="") Liên Hệ
+            form.d-flex.m-0(
+              action=``
+              form-search
+            )
+              input.form-control.me-2.search-input(
+                type="search"
+                name="keyword"
+                placeholder="Tìm kiếm..."
+                aria-label="Search"
+              )
+              button.btn.btn-search(type="submit") 
+                i.bi.bi-search
+        .col-5
+          nav.inner-menu.d-flex.justify-content-evenly.align-items-center.gap-3
+
+            ul.nav.align-items-center.g-2
+              li.nav-item
+                a.nav-link(href=`/`) Trang Chủ
+
+              li.nav-item.menu-item
+                a.nav-link.d-inline(href=`/products`) Sản Phẩm
+                  i.bi.bi-chevron-down.ms-1
+                +sub-menu(treeCategory, `/products`)
+
+              li.nav-item
+                a.nav-link(href=`/posts`) Tin tức
+
+              li.nav-item
+                a.nav-link(href=`/contact`) Liên hệ
+
+              li.nav-item
+                a.nav-link.fs-3(href=`/cart`) 
+                  i.bi.bi-cart2 
+                  span.fs-5 (#{cart.products.length})
+            
+
+

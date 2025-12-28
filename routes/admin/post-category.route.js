@@ -61,4 +61,5 @@ Router.get(
   checkPermission("posts-category_view"),
   controller.detail
 );
+
 module.exports = Router;

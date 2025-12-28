@@ -74,11 +74,11 @@ module.exports.changeStatus = async (req, res) => {
 module.exports.changeMulti = async (req, res) => {
   const ids = req.body.ids.split(", ");
   switch (req.body.type) {
-    case "In Stock":
+    case "active":
       ids.forEach(async (e) => {
         await ProductCategory.updateOne(
           { _id: e },
-          { status: "In Stock", updatedBy: res.locals.user._id }
+          { status: "active", updatedBy: res.locals.user._id }
         );
       });
       req.flash(
@@ -86,11 +86,11 @@ module.exports.changeMulti = async (req, res) => {
         `Đã thay đổi trạng thái Còn Hàng cho ${ids.length} danh mục`
       );
       break;
-    case "Low Stock":
+    case "inactive":
       ids.forEach(async (e) => {
         await ProductCategory.updateOne(
           { _id: e },
-          { status: "Low Stock", updatedBy: res.locals.user._id }
+          { status: "inactive", updatedBy: res.locals.user._id }
         );
       });
       req.flash(
@@ -226,3 +226,13 @@ module.exports.detail = async (req, res) => {
     category: category,
   });
 };
+
+// module.exports.test = async (req, res) => {
+//   const products = await ProductCategory.find({});
+
+//   for (const e of products) {
+//     await ProductCategory.updateOne({ _id: e._id }, { title: e.title });
+//   }
+
+//   res.send("Done");
+// };
