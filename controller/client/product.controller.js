@@ -1,6 +1,7 @@
 const Product = require("../../model/product.model");
 const ProductCategory = require("../../model/product-category.model");
 const Post = require("../../model/post.model");
+const paginationHelper = require("../../helper/pagination");
 
 const calculatorHelper = require("../../helper/calculator");
 const subCategoriesHelper = require("../../helper/subCategories");
@@ -59,8 +60,22 @@ module.exports.index = async (req, res) => {
     delete sort.position;
     sort[type] = value;
   }
+  //pagination
+  const objectPagination = await paginationHelper(
+    {
+      currentPage: 1,
+      limitPage: 6,
+    },
+    req.query,
+    Product,
+    find
+  );
+
   //get products
-  const products = await Product.find(find).sort(sort);
+  const products = await Product.find(find)
+    .sort(sort)
+    .limit(objectPagination.limitPage)
+    .skip(objectPagination.skipPage);
 
   //get category
   const categories = await ProductCategory.find({
@@ -79,7 +94,7 @@ module.exports.index = async (req, res) => {
     isFeatured: true,
   })
     .sort({ position: "desc" })
-    .limit(8)
+    .limit(3)
     .select("title description thumbnail slug createdAt");
 
   const newProducts = calculatorHelper.newPrice(products);
@@ -98,12 +113,7 @@ module.exports.index = async (req, res) => {
       rating: 4,
     },
     sortBy: sortBy, // Kiểu sắp xếp
-    pagination: {
-      currentPage: 1,
-      totalPages: 13,
-      limit: 12,
-    },
-    queryString: "&category=beauty&sortBy=price-desc",
+    pagination: objectPagination,
   });
 };
 
@@ -192,9 +202,21 @@ module.exports.productCategory = async (req, res) => {
       delete sort.position;
       sort[type] = value;
     }
-
+    //pagination
+    const objectPagination = await paginationHelper(
+      {
+        currentPage: 1,
+        limitPage: 6,
+      },
+      req.query,
+      Product,
+      find
+    );
     //get products
-    const products = await Product.find(find).sort(sort);
+    const products = await Product.find(find)
+      .sort(sort)
+      .limit(objectPagination.limitPage)
+      .skip(objectPagination.skipPage);
     const categoriesFilter = await ProductCategory.find({
       deleted: false,
       status: "active",
@@ -226,12 +248,7 @@ module.exports.productCategory = async (req, res) => {
         rating: 4,
       },
       sortBy: sortBy || "default", // Kiểu sắp xếp
-      pagination: {
-        currentPage: 1,
-        totalPages: 13,
-        limit: 12,
-      },
-      queryString: "&category=beauty&sortBy=price-desc",
+      pagination: objectPagination,
     });
   } catch (error) {
     console.log(error);

@@ -91,3 +91,16 @@ document.querySelectorAll(".quantity-control").forEach((control) => {
     }
   });
 });
+
+//handle pagination
+const pagination = document.querySelectorAll("[btn-page]");
+if (pagination) {
+  pagination.forEach((item) => {
+    item.addEventListener("click", () => {
+      const url = new URL(window.location.href);
+      const page = item.getAttribute("btn-page");
+      url.searchParams.set("page", page);
+      window.location.href = url.href;
+    });
+  });
+}

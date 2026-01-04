@@ -127,22 +127,6 @@
   box-shadow: 0 0 0 0.2rem var(--red-light);
 }
 
-/* Pagination */
-.pagination .page-link {
-  color: var(--red-main);
-  border-color: var(--border-color);
-}
-
-.pagination .page-link:hover {
-  background-color: var(--red-light);
-  border-color: var(--red-main);
-}
-
-.pagination .active .page-link {
-  background-color: var(--red-main);
-  border-color: var(--red-main);
-}
-
 /* Responsive */
 @media (max-width: 991px) {
   .filter-sidebar,

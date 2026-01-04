@@ -199,3 +199,20 @@
 }
 
 /* end list-product */
+
+/* ===== pagination ===== */
+/* Pagination */
+.pagination .page-link {
+  color: var(--red-main);
+  border-color: var(--border-color);
+}
+
+.pagination .page-link:hover {
+  background-color: var(--red-light);
+  border-color: var(--red-main);
+}
+
+.pagination .active {
+  background-color: var(--red-light);
+  border-color: var(--red-main);
+}

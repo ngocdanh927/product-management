@@ -82,21 +82,26 @@ block main
           .col-lg-4.col-md-6
             .card.news-card.h-100.shadow-sm
               .overflow-hidden
-                img.card-img-top(src=article.image alt=article.title)
+                img.card-img-top(
+                  src=article.thumbnail 
+                  alt=article.title
+                )
               .card-body
                 .news-meta.mb-3
                   i.bi.bi-calendar3.me-2
-                  span= article.date
-                  span.mx-2 |
-                  i.bi.bi-person.me-2
-                  span= article.author
+                  span= article.createdAt.toLocaleDateString('vi-VN')
                 h5.card-title
-                  a.text-decoration-none.text-dark(href=`/blog/${article.slug}`)= article.title
-                p.card-text.text-muted= article.excerpt
+                  a.text-decoration-none.text-dark(
+                    href=`/blog/${article.slug}`
+                  )= article.title
+                p.card-text.text-muted= article.description
               .card-footer.bg-white.border-0
-                a.text-primary.text-decoration-none.fw-semibold(href=`/blog/${article.slug}`)
+                a.text-primary.text-decoration-none.fw-semibold(
+                  href=`/blog/${article.slug}`
+                )
                   | Đọc thêm
                   i.bi.bi-arrow-right.ms-2
+
 
   //- TESTIMONIALS SECTION
   section.py-5.bg-light

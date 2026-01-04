@@ -1,6 +1,7 @@
 extends ../../layout/default
 include ../../mixins/box-head.pug
 include ../../mixins/list-product.pug
+include ../../mixins/pagination.pug
 
 block css
   link(rel="stylesheet", href="/css/pages/product.css")
@@ -116,22 +117,9 @@ block main
               +list-product(listProduct)
               
               //- Pagination
-              if pagination && pagination.totalPages > 1
-                nav.mt-4(aria-label="Product pagination")
-                  ul.pagination.justify-content-center
-                    if pagination.currentPage > 1
-                      li.page-item
-                        a.page-link(href=`?page=${pagination.currentPage - 1}${queryString}`)
-                          i.bi.bi-chevron-left
-                    
-                    - for (var i = 1; i <= pagination.totalPages; i++)
-                      li.page-item(class=i === pagination.currentPage ? 'active' : '')
-                        a.page-link(href=`?page=${i}${queryString}`)= i
-                    
-                    if pagination.currentPage < pagination.totalPages
-                      li.page-item
-                        a.page-link(href=`?page=${pagination.currentPage + 1}${queryString}`)
-                          i.bi.bi-chevron-right
+              if pagination && pagination.pageTotal > 1
+                .mt-4.d-flex.justify-content-center
+                  +pagination(pagination)
             else
               //- Empty State
               .text-center.py-5

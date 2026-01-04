@@ -1,6 +1,7 @@
 const Product = require("../../model/product.model");
 const ProductCategory = require("../../model/product-category.model");
-const calculaor = require("../../helper/calculator");
+const Post = require("../../model/post.model");
+const calculator = require("../../helper/calculator");
 
 // [GET] /
 module.exports.index = async (req, res) => {
@@ -22,7 +23,16 @@ module.exports.index = async (req, res) => {
       position: "desc",
     })
     .limit(4);
-  const productIsFeaturedsNew = calculaor.newPrice(productIsFeatureds);
+  const productIsFeaturedsNew = calculator.newPrice(productIsFeatureds);
+
+  //get post
+  const posts = await Post.find({
+    deleted: false,
+    status: "active",
+    isFeatured: true,
+  })
+    .sort({ position: "desc" })
+    .limit(3);
 
   res.render("client/pages/home/index", {
     pageTitle: "Trang chủ",
@@ -62,35 +72,7 @@ module.exports.index = async (req, res) => {
     products: productIsFeaturedsNew,
 
     // Articles/News - Tin tức & Blog
-    articles: [
-      {
-        title: "Top 10 điện thoại đáng mua nhất năm 2024",
-        slug: "top-10-dien-thoai-dang-mua-2024",
-        excerpt:
-          "Tổng hợp những chiếc điện thoại có cấu hình mạnh mẽ, giá cả hợp lý nhất trong năm...",
-        image: "/images/blog/article1.jpg",
-        date: "15/12/2024",
-        author: "Nguyễn Văn A",
-      },
-      {
-        title: "Hướng dẫn chọn laptop phù hợp cho sinh viên",
-        slug: "huong-dan-chon-laptop-sinh-vien",
-        excerpt:
-          "Những tiêu chí quan trọng khi lựa chọn laptop cho học tập và giải trí...",
-        image: "/images/blog/article2.jpg",
-        date: "10/12/2024",
-        author: "Trần Thị B",
-      },
-      {
-        title: "Mega Mart khai trương chi nhánh mới tại Hà Nội",
-        slug: "mega-mart-khai-truong-ha-noi",
-        excerpt:
-          "Sự kiện khai trương với nhiều ưu đãi hấp dẫn dành cho khách hàng tại Hà Nội...",
-        image: "/images/blog/article3.jpg",
-        date: "05/12/2024",
-        author: "Lê Văn C",
-      },
-    ],
+    articles: posts,
 
     // Testimonials
     testimonials: [

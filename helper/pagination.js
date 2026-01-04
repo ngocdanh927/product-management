@@ -1,5 +1,10 @@
-module.exports = async (objectPagination, query, Items, find) => {
-  const countItem = await Items.countDocuments(find);
+module.exports = async (objectPagination, query, Model, find) => {
+  //objectPagination gồm có
+  // {
+  //   currentPage: 1, //mặc định mới vào là page 1
+  //   limitPage: 5,
+  // },
+  const countItem = await Model.countDocuments(find);
 
   objectPagination.pageTotal = Math.ceil(
     countItem / objectPagination.limitPage
