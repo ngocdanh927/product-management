@@ -30,7 +30,7 @@
       )
         i.bi.bi-list-ul.me-3
         | Danh mục sản phẩm
-    if role.permissions.includes("products_view")
+    if role.permissions.includes("posts_view")
       a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
         href=`${prefixAdmin}/posts`
         class="hover-bg-light"
@@ -38,7 +38,7 @@
         i.bi.bi-file-earmark-richtext.me-3
         | Bài đăng
     
-    if role.permissions.includes("products-category_view")
+    if role.permissions.includes("posts-category_view")
       a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
         href=`${prefixAdmin}/post-category`
         class="hover-bg-light"
@@ -77,10 +77,10 @@
     //- System Section
     .px-3.mb-2.mt-3
       small.text-uppercase.text-muted.fw-bold HỆ THỐNG
-    
-    a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
-      href=`${prefixAdmin}/settings`
-      class="hover-bg-light"
-    )
-      i.bi.bi-gear.me-3
-      | Cài đặt
+    if role.permissions.includes("settings_view")
+      a.d-flex.align-items-center.text-white.text-decoration-none.px-3.py-2.mb-1(
+        href=`${prefixAdmin}/settings`
+        class="hover-bg-light"
+      )
+        i.bi.bi-gear.me-3
+        | Cài đặt

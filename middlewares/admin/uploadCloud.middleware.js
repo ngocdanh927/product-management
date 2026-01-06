@@ -22,7 +22,6 @@ const streamUpload = (file) => {
 };
 
 module.exports.upload = async (req, res, next) => {
-  log;
   if (req.file) {
     let result = await streamUpload(req.file);
     req.body[req.file.fieldname] = result.secure_url;

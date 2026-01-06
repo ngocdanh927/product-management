@@ -40,7 +40,7 @@ module.exports.createPost = async (req, res) => {
 
     if (isExist) {
       req.flash("error", "Email đã tồn tại!");
-      return res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+      return res.redirect(`${systemConfig.prefixAdmin}/accounts/create`);
     }
     req.body.password = md5(req.body.password);
     const newAccount = new Account(req.body);

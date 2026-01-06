@@ -42,7 +42,6 @@ const OrderSchema = new mongoose.Schema(
     //   enum: ["unpaid", "paid", "failed"],
     //   default: "unpaid",
     // },
-    createdBy: String,
     updatedBy: String,
     deletedBy: String,
     deleted: {

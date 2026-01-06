@@ -4,10 +4,14 @@ const controller = require("../../controller/admin/setting.controller");
 const multer = require("multer");
 const upload = multer();
 const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
+const {
+  checkPermission,
+} = require("../../middlewares/admin/checkPermission.middleware");
 
-Router.get("/", controller.general);
+Router.get("/", checkPermission("settings_view"), controller.general);
 Router.patch(
   "/",
+  checkPermission("settings_edit"),
   upload.fields([
     { name: "logo", maxCount: 1 },
     { name: "favicon", maxCount: 1 },

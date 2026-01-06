@@ -9,23 +9,10 @@ block main
           i.bi.bi-gear-fill.me-2
           | Cài đặt hệ thống
         p.text-muted.mb-0 Quản lý thông tin và cấu hình website
-      
-      button.btn.btn-primary(type="submit" form="formSettings")
-        i.bi.bi-check-circle.me-2
-        | Lưu tất cả thay đổi
-
-    //- Alert Messages
-    if success
-      .alert.alert-success.alert-dismissible.fade.show(role="alert")
-        i.bi.bi-check-circle-fill.me-2
-        = success
-        button.btn-close(type="button" data-bs-dismiss="alert")
-    
-    if error
-      .alert.alert-danger.alert-dismissible.fade.show(role="alert")
-        i.bi.bi-exclamation-triangle-fill.me-2
-        = error
-        button.btn-close(type="button" data-bs-dismiss="alert")
+      if role.permissions.includes("settings_edit")
+        button.btn.btn-primary(type="submit" form="formSettings")
+          i.bi.bi-check-circle.me-2
+          | Lưu tất cả thay đổi
 
     form#formSettings(method="POST" action=`${prefixAdmin}/settings?_method=PATCH` enctype="multipart/form-data")
       .row
@@ -372,12 +359,13 @@ block main
                   span.text-muted= new Date(settings.createdAt).toLocaleString('vi-VN')
           
           //- ===== ACTIONS =====
-          .card.shadow-sm.border-primary
-            .card-body.text-center
-              button.btn.btn-primary.btn-lg.w-100.mb-2(type="submit" form="formSettings")
-                i.bi.bi-check-circle-fill.me-2
-                | Lưu tất cả thay đổi
-              
-              button.btn.btn-outline-secondary.w-100(type="button" onclick="window.location.reload()")
-                i.bi.bi-arrow-clockwise.me-2
-                | Làm mới trang
+          if role.permissions.includes("settings_edit")
+            .card.shadow-sm.border-primary
+              .card-body.text-center
+                button.btn.btn-primary.btn-lg.w-100.mb-2(type="submit" form="formSettings")
+                  i.bi.bi-check-circle-fill.me-2
+                  | Lưu tất cả thay đổi
+                
+                button.btn.btn-outline-secondary.w-100(type="button" onclick="window.location.reload()")
+                  i.bi.bi-arrow-clockwise.me-2
+                  | Làm mới trang

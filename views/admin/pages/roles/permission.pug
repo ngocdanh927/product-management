@@ -172,6 +172,129 @@ block main
                           data-name="products-category_delete"
                           checked=item.permissions.includes("products-category_delete")
                         )
+                //- Danh sách bài viết
+                tr.table-secondary
+                  td.ps-4(colspan=records.length + 1)
+                    i.bi.bi-box-seam.me-2
+                    strong Danh sách bài viết
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-eye.text-info.me-2
+                    | Xem
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id 
+                          data-name="posts_view"
+                          checked=item.permissions.includes("posts_view")
+                        )
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-plus-circle.text-success.me-2
+                    | Thêm mới
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="posts_create"
+                          checked=item.permissions.includes("posts_create")
+                        )
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-pencil.text-warning.me-2
+                    | Chỉnh sửa
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="posts_edit"
+                          checked=item.permissions.includes("posts_edit")
+                        )
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-trash.text-danger.me-2
+                    | Xóa
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="posts_delete"
+                          checked=item.permissions.includes("posts_delete")
+                        )
+
+                //- Danh mục bài viết
+                tr.table-secondary
+                  td.ps-4(colspan=records.length + 1)
+                    i.bi.bi-list-ul.me-2
+                    strong Danh mục bài viết
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-eye.text-info.me-2
+                    | Xem
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id 
+                          data-name="posts-category_view"
+                          checked=item.permissions.includes("posts-category_view")
+                        )
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-plus-circle.text-success.me-2
+                    | Thêm mới
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="posts-category_create"
+                          checked=item.permissions.includes("posts-category_create")
+                        )
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-pencil.text-warning.me-2
+                    | Chỉnh sửa
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="posts-category_edit"
+                          checked=item.permissions.includes("posts-category_edit")
+                        )
+                
+                tr
+                  td.ps-5
+                    i.bi.bi-trash.text-danger.me-2
+                    | Xóa
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="posts-category_delete"
+                          checked=item.permissions.includes("posts-category_delete")
+                        )
 
                 //- Nhóm quyền
                 tr.table-secondary
@@ -248,6 +371,39 @@ block main
                           data-name="roles_permissions"
                           checked=item.permissions.includes("roles_permissions")
                         )
+
+                //- Tài khoản admin
+                tr.table-secondary
+                  td.ps-4(colspan=records.length + 1)
+                    i.bi.bi-gear.me-2
+                    strong Setting
+                tr
+                  td.ps-5
+                    i.bi.bi-eye.text-info.me-2
+                    | Xem
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id 
+                          data-name="settings_view"
+                          checked=item.permissions.includes("settings_view")
+                        )
+                tr
+                  td.ps-5
+                    i.bi.bi-pencil.text-warning.me-2
+                    | Chỉnh sửa
+                  each item in records
+                    td.text-center
+                      .form-check.d-inline-block
+                        input.form-check-input(
+                          type="checkbox" 
+                          data-id=item.id
+                          data-name="settings_edit"
+                          checked=item.permissions.includes("settings_edit")
+                        )
+                
 
                 //- Tài khoản admin
                 tr.table-secondary
