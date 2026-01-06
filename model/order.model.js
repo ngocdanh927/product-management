@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const OrderSchema = new mongoose.Schema(
   {
     // user_id: String,
-
     cart_id: String,
     note: String,
     userInfor: {
@@ -17,17 +16,15 @@ const OrderSchema = new mongoose.Schema(
     products: [
       {
         product_id: String,
-        title: String, // snapshot
+        title: String,
         thumbnail: String,
-        price: Number, // snapshot
-        discountPercentage: Number, // snapshot
+        price: Number,
+        discountPercentage: Number,
         quantity: Number,
       },
     ],
-
-    totalOriginalPrice: Number, // tổng giá gốc
-    // totalDiscount: Number, // tổng tiền giảm
-    totalPrice: Number, // tiền phải trả
+    totalOriginalPrice: Number,
+    totalPrice: Number,
 
     status: {
       type: String,
@@ -45,6 +42,14 @@ const OrderSchema = new mongoose.Schema(
     //   enum: ["unpaid", "paid", "failed"],
     //   default: "unpaid",
     // },
+    createdBy: String,
+    updatedBy: String,
+    deletedBy: String,
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: Date,
   },
   { timestamps: true }
 );

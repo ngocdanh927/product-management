@@ -26,9 +26,13 @@ html(lang="vi")
     
     //- Sidebar
     include ../partials/sidebar.pug
-    
+      
+
     //- Main Content
     main.inner-main
+      include ../mixins/alert.pug
+      +alert-success(5000)
+      +alert-error(5000)
       block main
 
     //- Scripts

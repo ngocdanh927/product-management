@@ -1,0 +1,189 @@
+extends ../../layout/default
+
+block main
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+      h2.fw-bold.mb-1
+        i.bi.bi-receipt.me-2.text-primary
+        | Chi Tiết Đơn Hàng
+      p.text-muted.mb-0 
+        | Mã đơn hàng: 
+        b ##{order._id.toString().slice(-6).toUpperCase()}
+    
+    .d-flex.gap-2
+      a.btn.btn-outline-secondary(href=`${prefixAdmin}/orders`)
+        i.bi.bi-arrow-left.me-1
+        | Quay lại
+      button.btn.btn-secondary(onclick="window.print()")
+        i.bi.bi-printer.me-1
+        | In hóa đơn
+
+  .card.mb-4.border-0.shadow-sm
+    .card-body
+      .row.align-items-center
+        
+        .col-md-5
+          h6.mb-0
+            | Trạng thái hiện tại: 
+            span.badge.fs-6.ms-2(class=getStatusClass(order.status))
+              | #{getStatusLabel(order.status)}
+          small.text-muted.d-block.mt-1 Cập nhật lần cuối: #{new Date(order.updatedAt).toLocaleString('vi-VN')}
+        
+        .col-md-7
+          form#formChangeStatusDetail(
+            action=""
+            data-path=`${prefixAdmin}/orders/change-status` 
+            data-id=`${order._id}` 
+            method="POST"
+            class="d-flex justify-content-md-end align-items-center gap-2"
+          )
+            label.fw-semibold.text-nowrap(for="statusSelect") Xử lý đơn:
+            
+            select.form-select(
+              name="status" 
+              id="statusSelect" 
+              style="width: 200px"
+              class=(order.status === 'completed' || order.status === 'cancelled') ? 'bg-light' : ''
+              disabled=(order.status === 'cancelled') 
+            )
+              option(value="pending" selected=(order.status === "pending")) Chờ xác nhận
+              option(value="confirmed" selected=(order.status === "confirmed")) Đã xác nhận
+              option(value="shipping" selected=(order.status === "shipping")) Đang giao hàng
+              option(value="completed" selected=(order.status === "completed")) Hoàn thành
+              option(value="cancelled" selected=(order.status === "cancelled")) Hủy đơn hàng
+
+            if order.status !== 'cancelled'
+              button.btn.btn-primary(type="submit")
+                i.bi.bi-check2-circle.me-1
+                | Cập nhật
+            else
+              button.btn.btn-secondary(type="button" disabled)
+                i.bi.bi-slash-circle.me-1
+                | Đã hủy
+
+  .row
+    .col-lg-8
+      .card.mb-4.border-0.shadow-sm
+        .card-header.bg-white.py-3
+          h6.mb-0.fw-bold Danh sách sản phẩm
+        
+        .card-body.p-0
+          .table-responsive
+            table.table.table-hover.align-middle.mb-0
+              thead.table-light
+                tr
+                  th.ps-4 Sản phẩm
+                  th.text-center Đơn giá
+                  th.text-center Số lượng
+                  th.text-end.pe-4 Tổng tiền
+              tbody
+                each item in order.products
+                  - let priceNew = item.price * (1 - item.discountPercentage/100)
+                  
+                  tr
+                    td.ps-4
+                      .d-flex.align-items-center
+                        img.rounded(
+                          src=item.thumbnail 
+                          alt=item.title 
+                          style="width: 60px; height: 60px; object-fit: cover"
+                          class="me-3 border"
+                        )
+                        div
+                          h6.mb-1.text-wrap(style="max-width: 250px") #{item.title}
+                          if item.discountPercentage > 0
+                            span.badge.bg-danger -#{item.discountPercentage}%
+                    
+                    td.text-center
+                      div.fw-semibold #{priceNew.toLocaleString('vi-VN')}đ
+                      if item.discountPercentage > 0
+                        small.text-decoration-line-through.text-muted #{item.price.toLocaleString('vi-VN')}đ
+                    
+                    td.text-center #{item.quantity}
+                    
+                    td.text-end.pe-4.fw-bold
+                      | #{(priceNew * item.quantity).toLocaleString('vi-VN')}đ
+
+      .card.mb-4.border-0.shadow-sm
+        .card-body
+          .row.justify-content-end
+            .col-md-6
+              .d-flex.justify-content-between.mb-2
+                span.text-muted Tổng tiền hàng (Gốc):
+                span.fw-semibold #{order.totalOriginalPrice.toLocaleString('vi-VN')}đ
+              
+              .d-flex.justify-content-between.mb-2
+                span.text-muted Giảm giá:
+                span.text-danger - #{ (order.totalOriginalPrice - order.totalPrice).toLocaleString('vi-VN') }đ
+              
+              .d-flex.justify-content-between.mb-2
+                span.text-muted Phí vận chuyển:
+                span.text-success Miễn phí
+              
+              hr
+              .d-flex.justify-content-between.align-items-center
+                span.h6.fw-bold.mb-0 Tổng thanh toán:
+                span.h4.fw-bold.text-primary.mb-0 #{order.totalPrice.toLocaleString('vi-VN')}đ
+
+    .col-lg-4
+      .card.mb-4.border-0.shadow-sm
+        .card-header.bg-white.py-3
+          h6.mb-0.fw-bold Thông tin khách hàng
+        .card-body
+          .d-flex.mb-3
+            .flex-shrink-0
+              .bg-light.rounded-circle.d-flex.align-items-center.justify-content-center(style="width: 40px; height: 40px")
+                i.bi.bi-person.text-primary
+            .flex-grow-1.ms-3
+              small.text-muted Họ và tên
+              div.fw-semibold #{order.userInfor.fullName}
+          
+          .d-flex.mb-3
+            .flex-shrink-0
+              .bg-light.rounded-circle.d-flex.align-items-center.justify-content-center(style="width: 40px; height: 40px")
+                i.bi.bi-envelope.text-primary
+            .flex-grow-1.ms-3
+              small.text-muted Email
+              div.fw-semibold #{order.userInfor.email}
+
+          .d-flex.mb-3
+            .flex-shrink-0
+              .bg-light.rounded-circle.d-flex.align-items-center.justify-content-center(style="width: 40px; height: 40px")
+                i.bi.bi-telephone.text-primary
+            .flex-grow-1.ms-3
+              small.text-muted Số điện thoại
+              div.fw-semibold #{order.userInfor.phone}
+          
+          .d-flex
+            .flex-shrink-0
+              .bg-light.rounded-circle.d-flex.align-items-center.justify-content-center(style="width: 40px; height: 40px")
+                i.bi.bi-geo-alt.text-primary
+            .flex-grow-1.ms-3
+              small.text-muted Địa chỉ giao hàng
+              div #{order.userInfor.address}
+
+      .card.border-0.shadow-sm
+        .card-header.bg-white.py-3
+          h6.mb-0.fw-bold Thông tin khác
+        .card-body
+          .mb-3
+            small.text-muted Phương thức thanh toán
+            div.fw-semibold.text-uppercase
+              if order.paymentMethod === 'cod'
+                | Thanh toán khi nhận hàng (COD)
+              else if order.paymentMethod === 'bank'
+                | Chuyển khoản ngân hàng
+              else
+                | #{order.paymentMethod}
+          
+          .mb-3
+            small.text-muted Thời gian đặt hàng
+            div #{new Date(order.createdAt).toLocaleString('vi-VN')}
+
+          div
+            small.text-muted Ghi chú từ khách hàng
+            if order.note
+              .alert.alert-light.border.mb-0.mt-1 #{order.note}
+            else
+              div.text-muted.fst-italic (Không có ghi chú)
+  script(src="/admin/js/order.js")

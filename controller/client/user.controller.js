@@ -6,6 +6,9 @@ const md5 = require("md5");
 
 // [GET] /user/login
 module.exports.login = (req, res) => {
+  if (req.cookies.tokenUser) {
+    return res.redirect(`/`);
+  }
   res.render("client/pages/user/login", { titlePage: "Đăng nhập" });
 };
 // [GET] /user/logout
