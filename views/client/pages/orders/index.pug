@@ -1,0 +1,184 @@
+extends ../../layout/default
+include ../../mixins/pagination.pug
+
+block css
+  link(rel="stylesheet", href="/css/pages/order.css")
+block main
+  //- Header
+  .orders-header
+    .container
+      h1.text-center
+        i.bi.bi-box-seam.me-2
+        | Đơn hàng của tôi
+      p.text-center.mb-0.opacity-75 Quản lý và theo dõi đơn hàng
+
+  .container.py-4
+    //- Filter Tabs
+    .order-filters
+      ul.nav.nav-pills.justify-content-center
+        li.nav-item
+          a.nav-link(
+            href="/orders"
+            class=!filterStatus ? 'active' : ''
+          ) 
+            i.bi.bi-list-ul.me-2
+            | Tất cả
+        li.nav-item
+          a.nav-link(
+            href="/orders?status=pending"
+            class=filterStatus === 'pending' ? 'active' : ''
+          )
+            i.bi.bi-clock-history.me-2
+            | Chờ xác nhận
+        li.nav-item
+          a.nav-link(
+            href="/orders?status=confirmed"
+            class=filterStatus === 'confirmed' ? 'active' : ''
+          )
+            i.bi.bi-arrow-repeat.me-2
+            | Đã xác nhận
+        li.nav-item
+          a.nav-link(
+            href="/orders?status=shipping"
+            class=filterStatus === 'shipping' ? 'active' : ''
+          )
+            i.bi.bi-truck.me-2
+            | Đang giao
+        li.nav-item
+          a.nav-link(
+            href="/orders?status=completed"
+            class=filterStatus === 'completed' ? 'active' : ''
+          )
+            i.bi.bi-check-circle.me-2
+            | Hoàn thành
+        li.nav-item
+          a.nav-link(
+            href="/orders?status=cancelled"
+            class=filterStatus === 'cancelled' ? 'active' : ''
+          )
+            i.bi.bi-x-circle.me-2
+            | Đã hủy
+
+    //- Orders List
+    if orders && orders.length > 0
+      each order in orders
+        .order-card
+          //- Order Header
+          .order-header
+            div
+              .order-id
+                | Đơn hàng: ##{order._id.toString().slice(-8).toUpperCase()}
+              .order-date
+                = new Date(order.createdAt).toLocaleString('vi-VN')
+            
+            - let statusClass = 'status-pending'
+            - let statusText = 'Chờ xác nhận'
+            - if (order.status === 'confirmed') { statusClass = 'status-confirmed'; statusText = 'Đã xác nhận'; }
+            - if (order.status === 'shipping') { statusClass = 'status-shipping'; statusText = 'Đang giao hàng'; }
+            - if (order.status === 'completed') { statusClass = 'status-completed'; statusText = 'Hoàn thành'; }
+            - if (order.status === 'cancelled') { statusClass = 'status-cancelled'; statusText = 'Đã hủy'; }
+            
+            span.order-status(class=statusClass)= statusText
+
+          //- Order Body - Đơn giản chỉ hiện sản phẩm đầu tiên
+          .order-body
+            .order-product-item
+              img.product-thumbnail(src=order.products[0].thumbnail alt=order.products[0].title)
+              .product-info
+                .product-title= order.products[0].title
+                .product-quantity.text-muted
+                  if order.products.length > 1
+                    | và #{order.products.length - 1} sản phẩm khác
+                  else
+                    | x#{order.products[0].quantity}
+
+          //- Order Footer - Đơn giản hơn
+          .order-footer
+            .d-flex.justify-content-between.align-items-center.flex-wrap.gap-3
+              div
+                .text-muted.small Tổng thanh toán
+                .total-amount= order.totalPrice.toLocaleString('vi-VN') + ' đ'
+              
+              .order-actions
+                a.btn.btn-primary.btn-sm(href=`/orders/detail/${order._id}`)
+                  i.bi.bi-eye.me-1
+                  | Xem chi tiết
+                
+                if order.status === 'pending'
+                  button.btn.btn-outline-danger.btn-sm(
+                    onclick=`cancelOrder('${order._id}')`
+                  )
+                    i.bi.bi-x-circle.me-1
+                    | Hủy đơn
+                
+                if order.status === 'completed'
+                  button.btn.btn-success.btn-sm(
+                    onclick=`reorder('${order._id}')`
+                  )
+                    i.bi.bi-arrow-repeat.me-1
+                    | Mua lại
+
+      //- Pagination
+      if pagination && pagination.pageTotal > 1
+        .mt-4.d-flex.justify-content-center
+          +pagination(pagination)
+
+    else
+      //- Empty State
+      .empty-orders
+        i.bi.bi-inbox
+        h4.text-muted Chưa có đơn hàng nào
+        p.text-muted.mb-4 Bạn chưa có đơn hàng nào trong danh sách này
+        a.btn.btn-primary(href="/products")
+          i.bi.bi-shop.me-2
+          | Tiếp tục mua sắm
+
+  //- JavaScript for actions
+  script.
+    function cancelOrder(orderId) {
+      if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+        fetch(`/orders/${orderId}/cancel`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Hủy đơn hàng thành công!');
+            window.location.reload();
+          } else {
+            alert(data.message || 'Không thể hủy đơn hàng!');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Có lỗi xảy ra!');
+        });
+      }
+    }
+    
+    function reorder(orderId) {
+      if (confirm('Bạn muốn mua lại các sản phẩm trong đơn hàng này?')) {
+        fetch(`/orders/${orderId}/reorder`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Đã thêm sản phẩm vào giỏ hàng!');
+            window.location.href = '/cart';
+          } else {
+            alert(data.message || 'Không thể thêm vào giỏ hàng!');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Có lỗi xảy ra!');
+        });
+      }
+    }

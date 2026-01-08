@@ -14,6 +14,8 @@ module.exports.login = (req, res) => {
 // [GET] /user/logout
 module.exports.logout = (req, res) => {
   res.clearCookie("tokenUser");
+  res.clearCookie("cartId");
+
   return res.redirect("/user/login");
 };
 
@@ -38,7 +40,9 @@ module.exports.loginPost = async (req, res) => {
     return res.redirect(req.get("Referrer"));
   }
 
-  res.cookie("tokenUser", user.tokenUser);
+  res.cookie("tokenUser", user.tokenUser, {
+    expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+  });
 
   //back trang chu
   res.redirect("/");

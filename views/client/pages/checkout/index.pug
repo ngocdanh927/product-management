@@ -47,6 +47,7 @@ block main
                   id="fullName"
                   name="fullName"
                   placeholder="Nguyễn Văn A"
+                  value = user.fullName || ""
                   required
                 )
               
@@ -59,6 +60,7 @@ block main
                   id="phone"
                   name="phone"
                   placeholder="0987654321"
+                  value = user.phone || ""
                   required
                 )
             
@@ -70,6 +72,7 @@ block main
                 id="email"
                 name="email"
                 placeholder="email@example.com"
+                value = user.email || ""
               )
             
             .mb-3
@@ -81,6 +84,7 @@ block main
                 id="address"
                 name="address"
                 placeholder="Số nhà, tên đường..."
+                value = user.address || ""
                 required
               )
             

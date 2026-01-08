@@ -14,16 +14,17 @@ const auth = require("../../middlewares/client/auth.middleware");
 const settingGeneral = require("../../middlewares/client/setting.middleware");
 
 module.exports = (app) => {
+  app.use(auth.checkLogin);
   app.use(treeCategoryMiddleWare);
   app.use(settingGeneral);
   app.use(checkCart);
-  app.use(auth.checkLogin);
+
   app.use("/", homeRoutes);
   app.use("/search", searchRoutes);
   app.use("/products", productRoutes);
   app.use("/cart", cartRoutes);
   app.use("/checkout", checkoutRoutes);
-  app.use("/order", orderRoutes);
+  app.use("/orders", orderRoutes);
   app.use("/user", userRoutes);
   app.use("/posts", postRoutes);
 };

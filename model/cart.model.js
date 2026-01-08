@@ -3,8 +3,22 @@ const mongoose = require("mongoose");
 
 const CartSchema = new mongoose.Schema(
   {
-    user_id: String,
-    products: [{ product_id: String, quantity: Number }],
+    user_id: {
+      type: String,
+      default: null,
+    },
+    products: [
+      {
+        product_id: String,
+        quantity: Number,
+      },
+    ],
+
+    expiresAt: {
+      type: Date,
+      default: null,
+      index: { expires: 0 }, // TTL INDEX
+    },
   },
   { timestamps: true }
 );

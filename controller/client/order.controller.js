@@ -1,7 +1,26 @@
 const Product = require("../../model/product.model");
 const Order = require("../../model/order.model");
 
-//[GET] /order/detail/:orderId
+//[GET] /orders
+
+module.exports.index = async (req, res) => {
+  const userId = res.locals.user.id;
+  const filter = { user_id: userId };
+
+  const status = req.query.status;
+  if (status) {
+    filter.status = status;
+  }
+
+  const orders = await Order.find(filter).sort({ createdAt: -1 }); // Sắp xếp đơn mới nhất lên đầu
+
+  res.render("client/pages/orders/index", {
+    titlePage: "Lịch sử đơn hàng",
+    orders: orders,
+  });
+};
+
+//[GET] /orders/detail/:orderId
 module.exports.detail = async (req, res) => {
   const order = await Order.findById(req.params.orderId).lean();
 
